@@ -1,4 +1,4 @@
-#include <stdio.h>
+ #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 #include <inttypes.h>
@@ -31,7 +31,7 @@
 
 #include "allHeaders.h"
 
-//#define RUNMAINDPDK
+#define RUNMAINDPDK
 #ifdef RUNMAINDPDK
 
 #define RTE_LOGTYPE_APP RTE_LOGTYPE_USER1
@@ -45,7 +45,9 @@ static const char *Beforescramble = "Beforescramble";
 static const char *scramble_2_BCC = "scramble_2_BCC";
 static const char *BCC_2_modulation = "BCC_2_modulation";
 static const char *modulation_2_CSD = "modulation_2_CSD";
-static const char *AfterCSD = "AfterCSD";
+static const char *IFFTAndaddWindow = "IFFTAndaddWindow";
+static const char *AfterIFFT = "AfterIFFT";
+
 
 const unsigned APEP_LEN_DPDK = 512; 
 
@@ -54,8 +56,8 @@ struct rte_ring *Ring_Beforescramble;
 struct rte_ring *Ring_scramble_2_BCC;
 struct rte_ring *Ring_BCC_2_modulation;
 struct rte_ring *Ring_modulation_2_CSD;
-struct rte_ring *Ring_AfterCSD;
-
+struct rte_ring *Ring_CSD_2_IFFTAndaddWindow;
+struct rte_ring *Ring_AfterIFFT;
 struct rte_mempool *mbuf_pool;
 	
 volatile int quit = 0;
@@ -66,6 +68,7 @@ long int BCC_encoder_DPDK_count = 0;
 long int modulate_DPDK_count = 0;
 long int Data_CSD_DPDK_count = 0;
 long int CSD_encode_DPDK_count = 0;
+long int IFFTAndaddWindow_dpdk_count = 0;
 int N_CBPS, N_SYM, ScrLength, valid_bits;
 
 struct timespec time1,time2,time_diff;	/** < Test the running time. >*/
@@ -77,12 +80,14 @@ static int GenDataAndScramble_DPDK (__attribute__((unused)) struct rte_mbuf *Dat
 static int BCC_encoder_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In);
 static int modulate_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In);
 static int CSD_encode_dpdk (__attribute__((unused)) struct rte_mbuf *Data_In);
+static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_In);
 
 static int ReadData_Loop();
 static int GenDataAndScramble_Loop();
 static int BCC_encoder_Loop();
 static int modulate_Loop();
 static int Data_CSD_Loop();  
+static int IFFTAndaddWindow_loop();
 
 struct timespec diff(struct timespec start, struct timespec end)
 {
@@ -185,7 +190,7 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	for(i=0;i<N_STS;i++){
 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
 	}
-
+    /*
 	if(CSD_encode_DPDK_count > 100000)
 	{
 		quit = 1;
@@ -198,10 +203,48 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 		printf("Running time # %ld.%ld Seconds \n",time_diff.tv_sec, time_diff.tv_nsec);
 		//printf("%.24s %ld Nanoseconds \n", ctime(&ts.tv_sec), ts.tv_nsec); 
 	}
-
+	*/
+	rte_ring_enqueue(Ring_CSD_2_IFFTAndaddWindow,Data_In);
 	//rte_pktmbuf_free(Data_In);
+	//rte_mempool_put(Data_In->pool, Data_In);
+	return 0;
+}
+
+static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_In)
+{
+	IFFTAndaddWindow_dpdk_count++;
+	if(IFFTAndaddWindow_dpdk_count> 100000)
+	{
+		quit = 1;
+
+		clock_gettime(CLOCK_REALTIME, &time2);
+		time_diff = diff(time1,time2);
+		printf("IFFTAndaddWindow_dpdk_count = %ld\n", CSD_encode_DPDK_count-1);
+		printf("Start time # %.24s %ld Nanoseconds \n",ctime(&time1.tv_sec), time1.tv_nsec);
+		printf("Stop time # %.24s %ld Nanoseconds \n",ctime(&time2.tv_sec), time2.tv_nsec);
+		printf("Running time # %ld.%ld Seconds \n",time_diff.tv_sec, time_diff.tv_nsec);
+		//printf("%.24s %ld Nanoseconds \n", ctime(&ts.tv_sec), ts.tv_nsec); 
+	}
+
 	rte_mempool_put(Data_In->pool, Data_In);
 	return 0;
+}
+
+static int IFFTAndaddWindow_loop()
+{
+   void *Data_in_IFFTAndaddWindow=NULL;
+   while (!quit)
+   {
+   		if(rte_ring_dequeue(Ring_CSD_2_IFFTAndaddWindow,&Data_in_IFFTAndaddWindow)<0)
+   		{
+   			continue;
+   		}
+   		else
+   		{
+   			IFFTAndaddWindow_dpdk(Data_in_IFFTAndaddWindow);
+   		}
+   }
+   return 0;	
 }
 
 static int Data_CSD_Loop() 
@@ -294,6 +337,17 @@ static int ReadData_Loop()
 	return 0;
 }
 
+
+
+void printStreamToFile_float(complex32* pData, int length, FILE* fp){
+    int n=length;
+    while(n--){
+        fprintf(fp,"%f %f\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
+        ++pData;
+    }
+}
+
+
 int
 main(int argc, char **argv)
 {
@@ -303,8 +357,49 @@ main(int argc, char **argv)
 	const unsigned pool_cache = 32;
 	const unsigned priv_data_sz = 0;
 	int ret;
+	int i;
 	// 运行一次得到preamble和HeLTF.
-	generatePreambleAndHeLTF_csd();
+	//generatePreambleAndHeLTF_csd();
+	
+    //complete one stream of Preamble
+    unsigned char SigInfo[3];
+	setSigInfo(SigInfo,3);
+	complex32* basicSig=(complex32*)malloc(64*sizeof(complex32));
+    MKSUREENMEM(basicSig);
+    memset(basicSig,0,64*sizeof(complex32));
+    generateBasicSig(basicSig,SigInfo,64);
+	for(i=0;i<N_STS;i++){
+        oneStreamOfSTF[i]=(complex32*)malloc(320*sizeof(complex32));
+        oneStreamOfLTF[i]=(complex32*)malloc(320*sizeof(complex32));
+        oneStreamOfSig[i]=(complex32*)malloc(160*sizeof(complex32));
+        MKSUREENMEM(oneStreamOfSTF[i]);
+        MKSUREENMEM(oneStreamOfLTF[i]);
+        MKSUREENMEM(oneStreamOfSig[i]);
+        memset(oneStreamOfSTF[i],0,320*sizeof(complex32));
+        memset(oneStreamOfLTF[i],0,320*sizeof(complex32));
+        memset(oneStreamOfSig[i],0,160*sizeof(complex32));
+ 		generateSTF(oneStreamOfSTF[i], i);
+ 		generateLTF(oneStreamOfLTF[i], i);
+ 		generateSig(basicSig,oneStreamOfSig[i],i);
+	}
+	FILE *t=fopen("oneStreamOfSTF.txt","w");
+	for(i=0;i<N_STS;i++){
+		printStreamToFile_float(oneStreamOfSTF[i],320,t);
+	}
+	fclose(t);
+
+	FILE *s=fopen("oneStreamOfLTF.txt","w");
+	for(i=0;i<N_STS;i++){
+		printStreamToFile_float(oneStreamOfLTF[i],320,s);
+	}
+	fclose(s);
+
+    FILE *p=fopen("oneStreamOfSig.txt","w");
+	for(i=0;i<N_STS;i++){
+		printStreamToFile_float(oneStreamOfSig[i],160,p);
+	}
+	fclose(p);
+
 	// 运行一次得到比特干扰码表。
 	Creatnewchart();
 	// 运行一次得到BCC编码表。
@@ -325,8 +420,9 @@ main(int argc, char **argv)
 		Ring_scramble_2_BCC = rte_ring_create(scramble_2_BCC, ring_size, rte_socket_id(), flags);
 		Ring_BCC_2_modulation = rte_ring_create(BCC_2_modulation, ring_size, rte_socket_id(), flags);
 		Ring_modulation_2_CSD = rte_ring_create(modulation_2_CSD, ring_size, rte_socket_id(), flags);
-		Ring_AfterCSD = rte_ring_create(AfterCSD, ring_size, rte_socket_id(), flags);		
-	
+		Ring_CSD_2_IFFTAndaddWindow=rte_ring_create(IFFTAndaddWindow,ring_size,rte_socket_id(),flags);
+		Ring_AfterIFFT = rte_ring_create(AfterIFFT, ring_size, rte_socket_id(), flags);		
+	    
 	if (Ring_Beforescramble == NULL)
 		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
 	if (Ring_scramble_2_BCC == NULL)
@@ -335,8 +431,10 @@ main(int argc, char **argv)
 		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
 	if (Ring_modulation_2_CSD == NULL)
 		rte_exit(EXIT_FAILURE, "Problem getting receiving ring\n");
-	if (Ring_AfterCSD == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+	if (Ring_CSD_2_IFFTAndaddWindow == NULL)
+		rte_exit(EXIT_FAILURE,"Problem getting sending ring\n");
+	if (Ring_AfterIFFT == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting receiving ring\n");
 	/* Creates a new mempool in memory to hold the mbufs. */
 	mbuf_pool = rte_pktmbuf_pool_create("MBUF_POOL", NUM_MBUFS,
 		MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE*16, rte_socket_id());
@@ -355,6 +453,7 @@ main(int argc, char **argv)
 	//rte_eal_remote_launch(modulate_Loop, NULL,7);
 	//rte_eal_remote_launch(modulate_Loop, NULL,8);
 	rte_eal_remote_launch(Data_CSD_Loop, NULL,5);
+	rte_eal_remote_launch(IFFTAndaddWindow_loop, NULL,6);
 	//Data_CSD_Loop(NULL);
 	rte_eal_mp_wait_lcore();
 	return 0;

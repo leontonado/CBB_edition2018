@@ -4,7 +4,7 @@
 #include "commonStructure.h"
 
 //main process
-/*extern void generatePreamble(complex32* oneStreamOfSTF,
+extern void generatePreamble(complex32* oneStreamOfSTF,
                              complex32* oneStreamOfLTF,
                              unsigned char* SigInfo,
                              complex32* oneStreamOfSig,
@@ -12,7 +12,7 @@
 
 extern void generateSTF(complex32* oneStreamOfSTF, int NTXindex);
 extern void generateLTF(complex32* oneStreamOfLTF, int NTXindex);
-extern void generateSig(complex32* basicSig, complex32* oneStreamOfSig, int NTXindex);*/
+extern void generateSig(complex32* basicSig, complex32* oneStreamOfSig, int NTXindex);
 extern void setSigInfo(unsigned char* SigInfo, int length);
 
 //main process bfcsd
@@ -40,13 +40,14 @@ extern void csdForHeLTF(complex32* pStreamBfcsd, complex32* pStreamAfcsd, int NT
 extern int numberOfHeLTF();
 extern void generatePreambleAndHeLTF_csd();
 extern void initcsdTableForHeLTF();
-/*extern void addCPforPreamble(complex32* pAfterIFFT,
+//add CP&window
+extern void addCPforPreamble(complex32* pAfterIFFT,
                              complex32* pBeforeAddWin,
                              int NTXindex);
 
 extern void addCPforSig(complex32* pAfterIFFT,
                              complex32* pBeforeAddWin,
-                             int NTXindex);*/
+                             int NTXindex);
 
 extern void generateBasicSig(complex32* basicSig,
                              unsigned char* SigInfo, int length);
@@ -81,10 +82,10 @@ extern void printForCpmlex32(complex32 rp);
 extern void printStreamToFile(complex32* pData, int length, FILE* fp);
 
 //IFFT
-/*extern void IFFT(complex* src,complex* dst,int size_n);
+extern void IFFT(complex* src,complex* dst,int size_n);
 
 extern void ifftShiftandIFFTPreamble(complex32* pstfAfterCSD,
                                      complex32* pAfterIFFT,
-                                     int N_tone);*/
+                                     int N_tone);
 
 #endif // HEADERPROCESS

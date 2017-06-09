@@ -34,6 +34,11 @@ extern int pilot_index[8];
 extern complex32* P[8];
 extern int* shiftTableForHeLTF[8];
 
+//one stream of preamble
+extern complex32* oneStreamOfSTF[N_TX];
+extern complex32* oneStreamOfLTF[N_TX];
+extern complex32* oneStreamOfSig[N_TX];
+//data
 //Preamble and HeLTF
 extern complex32* STF[N_TX];
 extern complex32* LTF[N_TX];

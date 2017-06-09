@@ -21,6 +21,11 @@ complex32* STF[N_TX]={0};
 complex32* LTF[N_TX]={0};
 complex32* Sig[N_TX]={0};
 complex32* heLTF[N_TX]={0};
+
+//one stream of preamble
+complex32* oneStreamOfSTF[N_TX];
+complex32* oneStreamOfLTF[N_TX];
+complex32* oneStreamOfSig[N_TX];
 //data
 int subcar = 256;
 int N_tone = 242;

@@ -11,12 +11,17 @@ void generateSTF(complex32* oneStreamOfSTF, int NTXindex){//int lengthofSTF
      MKSUREENMEM(pstfAfterCSD);
      memset(pstfAfterCSD,0,64*sizeof(complex32));
      //CSD for STF
+     #ifndef AVX2
      csdForPreamble(basicSTF, pstfAfterCSD+6, NTXindex, lengthAfterCSD);
+      #else
+     csdForPreamble(basicSTF, pstfAfterCSD, NTXindex, lengthAfterCSD);
+      #endif
+     //csdForPreamble(basicSTF, pstfAfterCSD+6, NTXindex, lengthAfterCSD);
+     
      //for test
      /*FILE* fp=fopen("stfAfterCSD.txt","w");
      printStreamToFile(pstfAfterCSD,64,fp);
      fclose(fp);*/
-     //for test
      //IFFTShift and IFFT
      complex32* pAfterIFFT=(complex32*)malloc(128*sizeof(complex32));
      MKSUREENMEM(pAfterIFFT);

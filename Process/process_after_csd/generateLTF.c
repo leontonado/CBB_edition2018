@@ -11,7 +11,12 @@ void generateLTF(complex32* oneStreamOfLTF, int NTXindex){
      MKSUREENMEM(pltfAfterCSD);
      memset(pltfAfterCSD,0,64*sizeof(complex32));
      //CSD for LTF
+     #ifndef AVX2
      csdForPreamble(basicLTF, pltfAfterCSD+6, NTXindex, lengthAfterCSD);
+      #else
+     csdForPreamble(basicLTF, pltfAfterCSD, NTXindex, lengthAfterCSD);
+      #endif
+     //csdForPreamble(basicLTF, pltfAfterCSD+6, NTXindex, lengthAfterCSD);
      //for test
      /*FILE* fp=fopen("ltfAfterCSD.txt","w");
      printStreamToFile(pltfAfterCSD,64,fp);

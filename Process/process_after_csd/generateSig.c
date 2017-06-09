@@ -11,7 +11,12 @@ void generateSig(complex32* basicSig, complex32* oneStreamOfSig, int NTXindex){
      MKSUREENMEM(psigAfterCSD);
      memset(psigAfterCSD,0,64*sizeof(complex32));
      //CSD for LTF
+     #ifndef AVX2
      csdForPreamble(basicSig+4, psigAfterCSD+4, NTXindex, lengthAfterCSD);
+      #else
+     csdForPreamble(basicSig+4, psigAfterCSD, NTXindex, lengthAfterCSD);
+      #endif
+     //csdForPreamble(basicSig+4, psigAfterCSD+4, NTXindex, lengthAfterCSD);
      //for test
      /*FILE* fp=fopen("sigAfterCSD.txt","w");
      printStreamToFile(psigAfterCSD,64,fp);

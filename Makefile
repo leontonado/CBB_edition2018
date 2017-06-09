@@ -42,21 +42,22 @@ include $(RTE_SDK)/mk/rte.vars.mk
 APP = CBB-Transmiter
 
 VPATH += $(SRCDIR)/BCCencode
-#VPATH += $(SRCDIR)/IFFT
+VPATH += $(SRCDIR)/IFFT
 VPATH += $(SRCDIR)/intrinsics_interface
 VPATH += $(SRCDIR)/Process
 VPATH += $(SRCDIR)/process_data
 VPATH += $(SRCDIR)/process_data/process_datafunction
 VPATH += $(SRCDIR)/typeDef
 VPATH += $(SRCDIR)/VarINIT
-
+VPATH += $(SRCDIR)/Process/process_after_csd
 # all source are stored in SRCS-y                  
 SRCS-y := maindpdk.c maindpdk2.c maindpdk3.c maindpdk4.c maindpdk5.c maindpdk6.c maindpdk7.c
 #SRCS-y += main.c mainbfBCC.c test.c 
 SRCS-y += ccoding_byte.c
 
-#SRCS-y += ifft.c ifftShiftandIFFTPreamble.c
-
+SRCS-y += ifft.c ifftShiftandIFFTPreamble.c
+SRCS-y += addCPforPreamble.c addCPforSig.c generateLTF.c generatePreamble.c
+SRCS-y += generateSTF.c generateSig.c
 SRCS-y += intrinsics_interface_v2.c
 SRCS-y += generatePreambleAndHeLTF_csd.c
 SRCS-y += bccInterleaverForSig.c csdForHeLTF.c csdForPreamble.c
@@ -75,7 +76,7 @@ SRCS-y += globalVarINIT.c
 
 CFLAGS += -O1
 CFLAGS += -I$(SRCDIR)/BCCencode
-#CFLAGS += -I$(SRCDIR)/IFFT
+CFLAGS += -I$(SRCDIR)/IFFT
 CFLAGS += -I$(SRCDIR)/intrinsics_interface
 CFLAGS += -I$(SRCDIR)/Process
 CFLAGS += -I$(SRCDIR)/process_data
