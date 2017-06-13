@@ -180,8 +180,8 @@ void IFFT(complex* src,complex* dst,int size_n){
     FFT_remap(src, size_n);
    // for(int i=0;i<size_n;i++)
     //    printf("%lf\n",src[i]);
-    clock_t start,end;
-    start=clock();
+    //clock_t start,end;
+   // start=clock();
     int k=size_n;
     int z=0;
     while (k/=2) {
@@ -228,8 +228,8 @@ void IFFT(complex* src,complex* dst,int size_n){
         dst[i].imag=src_com[i].imag/size_n;
         dst[i].real=src_com[i].real/size_n;
     }
-    end=clock();
-    printf("IFFT use time :%lfs for Datasize of:%d\n",(double)(end-start)/CLOCKS_PER_SEC,size_n);//(double) CLOCKS_PER_SEC
+   // end=clock();
+   // printf("IFFT use time :%lfs for Datasize of:%d\n",(double)(end-start)/CLOCKS_PER_SEC,size_n);//(double) CLOCKS_PER_SEC
 }
 
 //test for ifft

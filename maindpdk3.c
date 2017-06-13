@@ -37,8 +37,8 @@
 #define RTE_LOGTYPE_APP RTE_LOGTYPE_USER1
 // #define MEMPOOL_F_SP_PUT         0x0
 
-#define MBUF_CACHE_SIZE 32
 #define NUM_MBUFS 511
+#define MBUF_CACHE_SIZE 32
 static const char *MBUF_POOL = "MBUF_POOL";
 
 static const char *Beforescramble = "Beforescramble";
@@ -88,6 +88,8 @@ static int BCC_encoder_Loop();
 static int modulate_Loop();
 static int Data_CSD_Loop();  
 static int IFFTAndaddWindow_loop();
+
+void printStreamToFile_float(complex32* pData, int length, FILE* fp);
 
 struct timespec diff(struct timespec start, struct timespec end)
 {
@@ -143,7 +145,7 @@ static int GenDataAndScramble_DPDK (__attribute__((unused)) struct rte_mbuf *Dat
 {
 	//printf("GenDataAndScramble_DPDK_count = %d\n", GenDataAndScramble_DPDK_count++);
 	unsigned char *databits = rte_pktmbuf_mtod(Data_In, unsigned char *);
-	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, MBUF_CACHE_SIZE/2*1024);
+	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	GenDataAndScramble(data_scramble, ScrLength, databits, valid_bits);	
 
 	rte_ring_enqueue(Ring_scramble_2_BCC, Data_In); //The other half
@@ -154,7 +156,7 @@ static int BCC_encoder_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 {
 	//printf("BCC_encoder_DPDK_count = %d\n", BCC_encoder_DPDK_count++);
 	int CodeLength = N_SYM*N_CBPS/N_STS;
-	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, MBUF_CACHE_SIZE/2*1024);
+	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	unsigned char* BCCencodeout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, 0);
 	BCC_encoder_OPT(data_scramble, ScrLength, N_SYM, &BCCencodeout, CodeLength);
 
@@ -166,8 +168,8 @@ static int modulate_DPDK(__attribute__((unused)) struct rte_mbuf *Data_In)
 {
 	//printf("modulate_DPDK_count = %ld\n", modulate_DPDK_count++);
 	unsigned char* BCCencodeout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, 0);
-	unsigned char *stream_interweave_dataout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, MBUF_CACHE_SIZE/2*1024);
-	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, MBUF_CACHE_SIZE/2*1024);
+	unsigned char *stream_interweave_dataout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
+	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 
 	modulate_mapping(BCCencodeout, &stream_interweave_dataout, &subcar_map_data);
@@ -182,8 +184,8 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	CSD_encode_DPDK_count++;
 	//printf("%ld\n", CSD_encode_DPDK_count++);//CSD_encode_DPDK_count = %ld\n
 	//complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
-	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, MBUF_CACHE_SIZE/2*1024);
-	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, MBUF_CACHE_SIZE/2*1024);
+	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 	//Data_CSD(&subcar_map_data, N_SYM, &csd_data);
 	
@@ -212,8 +214,17 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 
 static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_In)
 {
+	int i;
 	IFFTAndaddWindow_dpdk_count++;
-	if(IFFTAndaddWindow_dpdk_count> 100000)
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
+	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,0);
+	csd_data_IDFT(&csd_data,&IFFT_data,N_SYM);
+	FILE *k=fopen("IFFT_data.txt","w");
+	printStreamToFile_float(IFFT_data,5120,k);
+	fclose(k);
+	
+	
+	if(IFFTAndaddWindow_dpdk_count> 200)
 	{
 		quit = 1;
 
@@ -437,7 +448,7 @@ main(int argc, char **argv)
 		rte_exit(EXIT_FAILURE, "Problem getting receiving ring\n");
 	/* Creates a new mempool in memory to hold the mbufs. */
 	mbuf_pool = rte_pktmbuf_pool_create("MBUF_POOL", NUM_MBUFS,
-		MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE*16, rte_socket_id());
+		MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE*30, rte_socket_id());
 
 	if (mbuf_pool == NULL)
 		rte_exit(EXIT_FAILURE, "Cannot create mbuf pool\n");
@@ -459,3 +470,4 @@ main(int argc, char **argv)
 	return 0;
 }
 #endif // RUN
+

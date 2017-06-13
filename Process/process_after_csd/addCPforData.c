@@ -5,13 +5,16 @@
 
 void addCPforData(complex32* pAfterIFFT,complex32* pBeforeAddWin,int N_SYM, int symbol){
     int i;
+    float CpDuration=3.2;
     int CpLen = CpDuration*SampRate;
     int DftSize = SampRate/(Band/4)*subcar;
     //data_add_cp = [symbol_data(:, end-CpLen+1:end), symbol_data];
 
     for(i=0; i<N_STS; i++){
-        memcpy(pBeforeAddWin+i*DftSize*N_SYM+symbol*DftSize, pAfterIFFT+i*DftSize+DftSize-CpLen, CpLen*sizeof(complex32));
-        memcpy(pBeforeAddWin+i*DftSize*N_SYM+symbol*DftSize+CpLen, pAfterIFFT+i*DftSize, DftSize*sizeof(complex32));
+        memcpy(pBeforeAddWin+i*(DftSize+CpLen)*N_SYM+symbol*(DftSize+CpLen),\
+         pAfterIFFT+i*DftSize+DftSize-CpLen, CpLen*sizeof(complex32));
+        memcpy(pBeforeAddWin+CpLen+i*(DftSize+CpLen)*N_SYM+symbol*(DftSize+CpLen),\
+         pAfterIFFT+i*DftSize, DftSize*sizeof(complex32));
     }
 /*
      //add cp

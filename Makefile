@@ -69,6 +69,7 @@ SRCS-y += mcs_table_for_20M.c
 #SRCS-y += process_data.c
 SRCS-y += BCC_encoder.c Data_CSD.c GenDataAndScramble.c
 SRCS-y += GenInit.c modulate.c modulate_opt.c PilotAdd_SubcarMap.c
+SRCS-y += ifftShiftandIFFTData.c addCPforData.c csd_data_IDFT.c
 
 SRCS-y += commonStructure.c
 
@@ -87,6 +88,7 @@ CFLAGS += -I$(SRCDIR)/VarINIT
 CFLAGS += -D OPTIMIZATION
 CFLAGS += -D AVX2
 CFLAGS += -D DPDK_FRAME
+#CFLAGS += -g
 #CFLAGS += $(WERROR_FLAGS)
 
 #LDLIBS += -L$(subst main,print_abcd,$(RTE_OUTPUT))/lib
