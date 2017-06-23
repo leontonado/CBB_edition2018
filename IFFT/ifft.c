@@ -28,6 +28,8 @@ void Multy_Complex(complex* ra,complex* rb,complex* dst){
     int32 timag=ra->real*rb->imag+ra->imag*rb->real;
     dst->real=treal>>dotscale;
     dst->imag=timag>>dotscale;
+    //dst->real=treal/8192;
+    //dst->imag=timag/8192;
 }
 
 void Divide_Complex(complex* ra,complex* rb,complex* dst){

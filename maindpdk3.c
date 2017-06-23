@@ -89,7 +89,6 @@ static int modulate_Loop();
 static int Data_CSD_Loop();  
 static int IFFTAndaddWindow_loop();
 
-void printStreamToFile_float(complex32* pData, int length, FILE* fp);
 
 struct timespec diff(struct timespec start, struct timespec end)
 {
@@ -192,6 +191,7 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	for(i=0;i<N_STS;i++){
 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
 	}
+	
     /*
 	if(CSD_encode_DPDK_count > 100000)
 	{
@@ -218,19 +218,25 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 	IFFTAndaddWindow_dpdk_count++;
 	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,0);
-	csd_data_IDFT(&csd_data,&IFFT_data,N_SYM);
+ //	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
+ //   for(i=0;i<subcar*N_STS*N_SYM;i++)
+ //   {
+ //  	fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
+ //   }
+ //   fclose(f);
+	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
 	FILE *k=fopen("IFFT_data.txt","w");
 	printStreamToFile_float(IFFT_data,5120,k);
 	fclose(k);
 	
 	
-	if(IFFTAndaddWindow_dpdk_count> 200)
+	if(IFFTAndaddWindow_dpdk_count> 100)
 	{
 		quit = 1;
-
+		printf("IFFTAndaddWindow_dpdk_count = %ld\n", IFFTAndaddWindow_dpdk_count-1);
 		clock_gettime(CLOCK_REALTIME, &time2);
 		time_diff = diff(time1,time2);
-		printf("IFFTAndaddWindow_dpdk_count = %ld\n", CSD_encode_DPDK_count-1);
+
 		printf("Start time # %.24s %ld Nanoseconds \n",ctime(&time1.tv_sec), time1.tv_nsec);
 		printf("Stop time # %.24s %ld Nanoseconds \n",ctime(&time2.tv_sec), time2.tv_nsec);
 		printf("Running time # %ld.%ld Seconds \n",time_diff.tv_sec, time_diff.tv_nsec);
@@ -415,13 +421,15 @@ main(int argc, char **argv)
 	Creatnewchart();
 	// 运行一次得到BCC编码表。
 	init_BCCencode_table();
-	// 运行一次得到生成导频的分流交织表
-	initial_streamwave_table();
+	
+	
 	// 运行一次得到CSD表。
 	//initcsdTableForHeLTF();
 	// 初始化函数，计算OFDM符号个数，字节长度
 	//int N_CBPS, N_SYM, ScrLength, valid_bits;
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
+   	// 运行一次得到生成导频的分流交织表
+   	initial_streamwave_table(N_SYM);
 	///////////////////////////////////////////////////////////////////////////////////
 	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);

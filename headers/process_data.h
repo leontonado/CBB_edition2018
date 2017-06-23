@@ -23,7 +23,7 @@ extern void BCC_encoder_OPT(unsigned char *data_scramble, int ScrLength, int N_S
 #endif
 //µ÷ÖÆº¯Êý
 extern void modulate(unsigned char **code_out , int BCC_length, int N_SYM, complex32 **sym_mod, int *NumSampEffect );
-extern void initial_streamwave_table();
+extern void initial_streamwave_table(int N_SYM);
 #ifndef DPDK_FRAME  //no  working in  dpdk frame.
 void modulate_mapping(unsigned char *BCC_output, complex32 **subcar_map_data);
 #else
@@ -37,7 +37,7 @@ extern void Data_CSD(complex32 **subcar_map_data, int N_SYM, complex32 **csd_dat
 extern void __Data_CSD_aux(complex32 **subcar_map_data, int N_SYM, complex32 **csd_data,int NTXindex);//maybe use for multi pthread
 #endif
 //IFFT
-extern void csd_data_IDFT(complex32 **csd_data, complex32 **trans_data, int N_SYM);
+extern void csd_data_IDFT(complex32 *csd_data, complex32 *trans_data, int N_SYM);
 extern void ifftShiftandIFFTData(complex32* dataAfterCSD,complex32* dataAfterIFFT);
-extern void addCPforData(complex32* pAfterIFFT,complex32* pBeforeAddWin,int N_SYM, int symbol);
+extern void addCPforData(complex32* pAfterIFFT,complex32* pBeforeAddWin,int N_SYM, int symbol,int tx);
 #endif // PROCESS_DATA

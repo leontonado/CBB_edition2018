@@ -21,24 +21,25 @@ void ifftShiftandIFFTData(complex32* dataAfterCSD,complex32* dataAfterIFFT){
         pBeforeIFFT[qtr_DftSize*3+i].real = dataAfterCSD[qtr_DftSize+i].real;
      }
      //for test
-     /*fp=fopen("stfBeforeIFFT.txt","w");
-     for(i=0;i<DftSize;i++) fprintf(fp,"%f %f\n",pBeforeIFFT[i].real,pBeforeIFFT[i].imag);
-     fclose(fp);*/
+     //FILE *fp=fopen("BeforeIFFT.txt","w");
+    //for(i=0;i<DftSize;i++) fprintf(fp,"%f %f\n",pBeforeIFFT[i].real,pBeforeIFFT[i].imag);
+    // fclose(fp);
      //for test
      //deal with IFFT
      complex* pAfterIFFTtemp=(complex*)malloc(DftSize*sizeof(complex));
      MKSUREENMEM(pAfterIFFTtemp);
      memset(pAfterIFFTtemp,0,DftSize*sizeof(complex));
      IFFT(pBeforeIFFT,pAfterIFFTtemp,DftSize);
+    // FILE *z=fopen("IFFT_temp.txt","w");
+    // for(i=0;i<DftSize;i++) fprintf(z,"%f %f\n",pAfterIFFTtemp[i].real,pAfterIFFTtemp[i].imag);
+    //fclose(z);
      //power normalization, it may put into addCP
      for(i=0;i<DftSize;i++){
         dataAfterIFFT[i].imag = pAfterIFFTtemp[i].imag*coeff;
         dataAfterIFFT[i].real = pAfterIFFTtemp[i].real*coeff;
      }
      //for test
-     /*fp=fopen("stfAfterIFFT.txt","w");
-     for(i=0;i<DftSize;i++) fprintf(fp,"%f %f\n",pAfterIFFT[i].real,pAfterIFFT[i].imag);
-     fclose(fp);*/
+     
      //for test
      free(pBeforeIFFT);
      free(pAfterIFFTtemp);

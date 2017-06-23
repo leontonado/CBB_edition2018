@@ -8,7 +8,7 @@
 #include <memory.h>
 float SymbDuration=12.8;
 
-void csd_data_IDFT(complex32 **csd_data, complex32 **trans_data, int N_SYM)
+void csd_data_IDFT(complex32 *csd_data, complex32 *trans_data, int N_SYM)
 {
     int i;
     int16 temp;
@@ -36,12 +36,19 @@ void csd_data_IDFT(complex32 **csd_data, complex32 **trans_data, int N_SYM)
     }
 
     int symbol,tx;
+    //complex32 *test1;
+    complex32 *p_temp;
     for(symbol=0; symbol<N_SYM; symbol++)
     {
         for(tx=0; tx<Ntx; tx++)
         {
-            //memcpy(X_freq,&(csd_data[tx][subcar*symbol]),sizeof(complex32)*subcar);
-            memcpy(X_freq,&((*csd_data)[tx*subcar*N_SYM+subcar*symbol]),sizeof(complex32)*subcar);
+            //test1=csd_data+tx*subcar*N_SYM;
+            p_temp=csd_data+tx*subcar*N_SYM+subcar*symbol;//memcpy(X_freq,&(csd_data[tx][subcar*symbol]),sizeof(complex32)*subcar);
+            memcpy(X_freq,p_temp,sizeof(complex32)*subcar);
+          //  FILE *w=fopen("X_freq.txt", "w");
+          //  printStreamToFile(X_freq,256,w);
+          //  fclose(w);
+
             ///Ô¤´¦Àí
             switch(Band)
             {
@@ -82,9 +89,23 @@ void csd_data_IDFT(complex32 **csd_data, complex32 **trans_data, int N_SYM)
                 //    X_freq_pad[i] = 0;
             }
             ifftShiftandIFFTData(X_freq_pad,symbol_data[tx]);
+           //for test
+           // FILE *e=fopen("X_freq_pad.txt", "w");
+           // printStreamToFile(X_freq_pad,512,e);
+           // fclose(e);
+           // FILE *q=fopen("symbol_data[0]", "w");
+           // printStreamToFile(symbol_data[0],512,q);
+           // fclose(q);
 
-        }//for(tx=0; tx<Ntx; tx++)
-        addCPforData(symbol_data[0],*trans_data,N_SYM,symbol);
+
+        }
+      // FILE* r=fopen("symbol_data_second.txt","w");
+      //  for(tx=0;tx<Ntx;tx++){
+      //         printStreamToFile_float(symbol_data[tx],512,r);
+      //  }
+      //  fclose(r);
+        for(tx=0; tx<Ntx; tx++)
+        addCPforData(symbol_data[tx],trans_data,N_SYM,symbol,tx);
 
     }//for(symbol=0; symbol<N_SYM; symble++)
 

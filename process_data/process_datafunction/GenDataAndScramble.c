@@ -53,7 +53,7 @@ void __GenDataAndScramble_aux(unsigned char *data_scramble, unsigned char databi
 
 void GenDataAndScramble(unsigned char *data_scramble, int ScrLength, unsigned char *databits, int valid_bits)
 {
-    int i,j,k;
+    int i,j,k,l,m,n;
     int count;
     unsigned char Reg[7]={1,0,1,1,0,1,0};
 	#ifdef OPTIMIZATION
@@ -105,8 +105,32 @@ void GenDataAndScramble(unsigned char *data_scramble, int ScrLength, unsigned ch
 
         }
 		#else
+        count=count+8;
+        if(count<=valid_bits){
 		data_scramble[i]=ChartTable[data[i]][reg_initstate].data_out;
 		reg_initstate=ChartTable[data[i]][reg_initstate].reg_out;
+        }
+        else
+        {
+            unsigned char Reg[7];
+            for(l=0;l<7;l++)
+            {
+              Reg[l]=GetBit(reg_initstate,l);
+            }
+            int w=valid_bits%8;
+            for(m=0;m<w;m++)        
+            {
+                  if((GetBit(data[i],m)+Reg[0]+Reg[3])%2)
+                  {
+                    SetN1(&(data_scramble[i]),m);
+                  }
+                  for(n=0;n<6;n++)
+                  {
+                    Reg[n]=Reg[n+1];
+                  }
+                  Reg[6]=GetBit(data_scramble[i],m);
+            }
+        }  
 		#endif
     }
 }
@@ -126,3 +150,4 @@ unsigned char GetBit(unsigned char buf, int n)  //have been tested
 {
     return (buf>>n) & 0x01;
 }
+
