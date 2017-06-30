@@ -64,4 +64,12 @@ void printStreamToFile(complex32* pData, int length, FILE* fp){
     }
 }
 
+void printStreamToFile_float(complex32* pData, int length, FILE* fp){
+    int n=length;
+    while(n--){
+        fprintf(fp,"%f %f\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
+        ++pData;
+    }
+}
+
 #endif // RUN

@@ -192,7 +192,7 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
 	}
 	
-    /*
+   /*
 	if(CSD_encode_DPDK_count > 100000)
 	{
 		quit = 1;
@@ -218,19 +218,19 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 	IFFTAndaddWindow_dpdk_count++;
 	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,0);
- //	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
- //   for(i=0;i<subcar*N_STS*N_SYM;i++)
- //   {
- //  	fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
- //   }
- //   fclose(f);
 	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
-	FILE *k=fopen("IFFT_data.txt","w");
-	printStreamToFile_float(IFFT_data,5120,k);
-	fclose(k);
+ 	//	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
+ 	//   for(i=0;i<subcar*N_STS*N_SYM;i++)
+ 	//   {
+ 	//  	fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
+ 	//   }
+ 	//   fclose(f);	
+	//FILE *k=fopen("IFFT_data.txt","w");
+	//printStreamToFile_float(IFFT_data,5120,k);
+	//fclose(k);
 	
 	
-	if(IFFTAndaddWindow_dpdk_count> 100)
+	if(IFFTAndaddWindow_dpdk_count> 100000)
 	{
 		quit = 1;
 		printf("IFFTAndaddWindow_dpdk_count = %ld\n", IFFTAndaddWindow_dpdk_count-1);
@@ -356,15 +356,6 @@ static int ReadData_Loop()
 
 
 
-void printStreamToFile_float(complex32* pData, int length, FILE* fp){
-    int n=length;
-    while(n--){
-        fprintf(fp,"%f %f\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
-        ++pData;
-    }
-}
-
-
 int
 main(int argc, char **argv)
 {
@@ -399,7 +390,7 @@ main(int argc, char **argv)
  		generateLTF(oneStreamOfLTF[i], i);
  		generateSig(basicSig,oneStreamOfSig[i],i);
 	}
-	FILE *t=fopen("oneStreamOfSTF.txt","w");
+	/*FILE *t=fopen("oneStreamOfSTF.txt","w");
 	for(i=0;i<N_STS;i++){
 		printStreamToFile_float(oneStreamOfSTF[i],320,t);
 	}
@@ -415,7 +406,7 @@ main(int argc, char **argv)
 	for(i=0;i<N_STS;i++){
 		printStreamToFile_float(oneStreamOfSig[i],160,p);
 	}
-	fclose(p);
+	fclose(p);*/
 
 	// 运行一次得到比特干扰码表。
 	Creatnewchart();

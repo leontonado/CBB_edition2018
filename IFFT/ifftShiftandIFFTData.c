@@ -42,5 +42,7 @@ void ifftShiftandIFFTData(complex32* dataAfterCSD,complex32* dataAfterIFFT){
      
      //for test
      free(pBeforeIFFT);
+     pBeforeIFFT=NULL;
      free(pAfterIFFTtemp);
+     pAfterIFFTtemp=NULL;
 }

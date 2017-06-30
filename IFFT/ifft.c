@@ -230,6 +230,8 @@ void IFFT(complex* src,complex* dst,int size_n){
         dst[i].imag=src_com[i].imag/size_n;
         dst[i].real=src_com[i].real/size_n;
     }
+    free(src_com);
+    src_com=NULL;
    // end=clock();
    // printf("IFFT use time :%lfs for Datasize of:%d\n",(double)(end-start)/CLOCKS_PER_SEC,size_n);//(double) CLOCKS_PER_SEC
 }

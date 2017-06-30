@@ -88,6 +88,7 @@ static int GenDataAndScramble_DPDK (__attribute__((unused)) struct rte_mbuf *Dat
 static int BCC_encoder_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In);
 static int modulate_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In);
 static int CSD_encode_dpdk (__attribute__((unused)) struct rte_mbuf *Data_In);
+static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_In);
 
 static int ReadData_Loop();
 static int GenerateData_Loop1();
@@ -149,7 +150,7 @@ static int GenDataAndScramble_DPDK (__attribute__((unused)) struct rte_mbuf *Dat
 	//printf("GenDataAndScramble_DPDK_count = %ld\n", GenDataAndScramble_DPDK_count++);
 	
 	unsigned char *databits = rte_pktmbuf_mtod(Data_In, unsigned char *);
-	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*8);
+	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	GenDataAndScramble(data_scramble, ScrLength, databits, valid_bits);	
 
 	return 0;
@@ -160,7 +161,7 @@ static int BCC_encoder_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	//printf("BCC_encoder_DPDK_count = %ld\n", BCC_encoder_DPDK_count++);
 
 	int CodeLength = N_SYM*N_CBPS/N_STS;
-	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*8);
+	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	unsigned char* BCCencodeout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, 0);
 	BCC_encoder_OPT(data_scramble, ScrLength, N_SYM, &BCCencodeout, CodeLength);
 
@@ -172,7 +173,7 @@ static int modulate_DPDK(__attribute__((unused)) struct rte_mbuf *Data_In)
 	//printf("modulate_DPDK_count = %ld\n", modulate_DPDK_count++);
 
 	unsigned char* BCCencodeout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, 0);
-	unsigned char *stream_interweave_dataout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*8);
+	unsigned char *stream_interweave_dataout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*8);
 	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 
@@ -188,13 +189,26 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	//printf("CSD_encode_DPDK_count = %ld\n", CSD_encode_DPDK_count++);
 	//complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*8);
-	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*8);
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 	//Data_CSD(&subcar_map_data, N_SYM, &csd_data);
 	
 	for(i=0;i<N_STS;i++){
 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
 	}
+	return 0;
+}
+
+static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_In)
+{
+	int i;
+	//IFFTAndaddWindow_dpdk_count++;
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
+	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,0);
+	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
+	//FILE *k=fopen("IFFT_data.txt","w");
+	//printStreamToFile_float(IFFT_data,5120,k);
+	//fclose(k);
 	return 0;
 }
 
@@ -217,7 +231,7 @@ static int Data_Retrive_Loop()
 			usleep(10000);
 			continue;
 		}
-		if(Retrive_DPDK_count >= 1000000)
+		if(Retrive_DPDK_count >= 100000)
 		{
 			quit = 1;
 			clock_gettime(CLOCK_REALTIME, &time2);
@@ -250,11 +264,13 @@ static int GenerateData_Loop1()
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
 			CSD_encode_DPDK(Data_In_GenerateData);
+			IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData1, Data_In_GenerateData);
+			GenerateData_Loop1_count++;
 		}
 		else 
 		{	
-			GenerateData_Loop1_count++;
+			
 			//usleep(10000);
 			continue;
 		}
@@ -274,11 +290,13 @@ static int GenerateData_Loop2()
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
 			CSD_encode_DPDK(Data_In_GenerateData);
+			IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData2, Data_In_GenerateData);
+			GenerateData_Loop2_count++;
 		}
 		else 
 		{	
-			GenerateData_Loop2_count++;
+			
 			//usleep(10000);
 			continue;
 		}
@@ -298,11 +316,13 @@ static int GenerateData_Loop3()
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
 			CSD_encode_DPDK(Data_In_GenerateData);
+			IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData3, Data_In_GenerateData);
+			GenerateData_Loop3_count++;
 		}
 		else 
 		{	
-			GenerateData_Loop3_count++;
+			
 			//usleep(10000);
 			continue;
 		}
@@ -323,6 +343,7 @@ static int ReadData_Loop()
 		if (Data != NULL)
 		{
 			ReadData(Data, Data_in);
+			ReadData_Loop_count++;
 			//rte_ring_enqueue(Ring_Beforescramble, Data);
 			dis_count++;
 			if(dis_count == 17){
@@ -347,11 +368,13 @@ static int ReadData_Loop()
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
 			CSD_encode_DPDK(Data_In_GenerateData);
+			IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData4, Data_In_GenerateData);
+			GenerateData_Loop4_count++;
 		}
 		else 
 		{
-			ReadData_Loop_count++;
+			
 			//usleep(100000);
 			continue;
 		}
@@ -372,18 +395,19 @@ main(int argc, char **argv)
 	const unsigned priv_data_sz = 0;
 	int ret;
 	// 运行一次得到preamble和HeLTF.
-	generatePreambleAndHeLTF_csd();
+	//generatePreambleAndHeLTF_csd();
 	// 运行一次得到比特干扰码表。
 	Creatnewchart();
 	// 运行一次得到BCC编码表。
 	init_BCCencode_table();
-	// 运行一次得到生成导频的分流交织表
-	initial_streamwave_table();
+
 	// 运行一次得到CSD表。
 	//initcsdTableForHeLTF();
 	// 初始化函数，计算OFDM符号个数，字节长度
 	//int N_CBPS, N_SYM, ScrLength, valid_bits;
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
+   	// 运行一次得到生成导频的分流交织表
+	initial_streamwave_table(N_SYM);
 	///////////////////////////////////////////////////////////////////////////////////
 	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);
@@ -419,7 +443,7 @@ main(int argc, char **argv)
 
 	/* Creates a new mempool in memory to hold the mbufs. */
 	mbuf_pool = rte_pktmbuf_pool_create("MBUF_POOL", NUM_MBUFS,
-		MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE*16, rte_socket_id());
+		MBUF_CACHE_SIZE, 0, RTE_MBUF_DEFAULT_BUF_SIZE*30, rte_socket_id());
 
 	if (mbuf_pool == NULL)
 		rte_exit(EXIT_FAILURE, "Cannot create mbuf pool\n");
@@ -436,3 +460,12 @@ main(int argc, char **argv)
 	return 0;
 }
 #endif // RUN
+/*
+void printStreamToFile_float(complex32* pData, int length, FILE* fp){
+    int n=length;
+    while(n--){
+        fprintf(fp,"%f %f\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
+        ++pData;
+    }
+}
+*/

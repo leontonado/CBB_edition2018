@@ -8,14 +8,14 @@
 #include <memory.h>
 float SymbDuration=12.8;
 
+
 void csd_data_IDFT(complex32 *csd_data, complex32 *trans_data, int N_SYM)
 {
     int i;
     int16 temp;
     int Ntx = N_STS;
-   
-    int SymbLen = (int)(SymbDuration*SampRate);
     int DftSize = SampRate/(Band/4)*subcar;
+    int SymbLen = (int)(SymbDuration*SampRate);
     double coeff = DftSize / sqrt(N_tone*Ntx);
     complex32 *X_freq = (complex32 *)malloc(sizeof(complex32)*subcar);
     complex32 *X_freq_pad = (complex32 *)malloc(sizeof(complex32)*DftSize);
@@ -108,6 +108,20 @@ void csd_data_IDFT(complex32 *csd_data, complex32 *trans_data, int N_SYM)
         addCPforData(symbol_data[tx],trans_data,N_SYM,symbol,tx);
 
     }//for(symbol=0; symbol<N_SYM; symble++)
+    free(X_freq);
+    free(X_freq_pad);
+    X_freq=NULL;
+    X_freq_pad=NULL;
+    for(i=0;i<N_STS;i++){
+    free(symbol_data[i]);
+    symbol_data[i]=NULL;  
+    }
+}
 
-
+void printStreamToFile_float(complex32* pData, int length, FILE* fp){
+    int n=length;
+    while(n--){
+        fprintf(fp,"%f %f\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
+        ++pData;
+    }
 }

@@ -88,7 +88,7 @@ CFLAGS += -I$(SRCDIR)/VarINIT
 CFLAGS += -D OPTIMIZATION
 CFLAGS += -D AVX2
 CFLAGS += -D DPDK_FRAME
-CFLAGS += -g -O0
+#CFLAGS += -g -O0
 #CFLAGS += $(WERROR_FLAGS)
 
 #LDLIBS += -L$(subst main,print_abcd,$(RTE_OUTPUT))/lib

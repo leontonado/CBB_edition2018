@@ -540,18 +540,19 @@ main(int argc, char **argv)
 	const unsigned priv_data_sz = 0;
 	int ret;
 	// 运行一次得到preamble和HeLTF.
-	generatePreambleAndHeLTF_csd();
+	//generatePreambleAndHeLTF_csd();
 	// 运行一次得到比特干扰码表。
 	Creatnewchart();
 	// 运行一次得到BCC编码表。
 	init_BCCencode_table();
-	// 运行一次得到生成导频的分流交织表
-	initial_streamwave_table();
+	
 	// 运行一次得到CSD表。
 	//initcsdTableForHeLTF();
 	// 初始化函数，计算OFDM符号个数，字节长度
 	//int N_CBPS, N_SYM, ScrLength, valid_bits;
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
+   	// 运行一次得到生成导频的分流交织表
+	initial_streamwave_table(N_SYM);
 	///////////////////////////////////////////////////////////////////////////////////
 	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);
