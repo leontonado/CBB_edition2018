@@ -51,7 +51,7 @@ VPATH += $(SRCDIR)/typeDef
 VPATH += $(SRCDIR)/VarINIT
 VPATH += $(SRCDIR)/Process/process_after_csd
 # all source are stored in SRCS-y                  
-SRCS-y := maindpdk.c maindpdk2.c maindpdk3.c maindpdk4.c maindpdk5.c maindpdk6.c maindpdk7.c
+SRCS-y := maindpdk.c maindpdk2.c maindpdk3.c maindpdk4.c maindpdk5.c maindpdk6.c maindpdk7.c maindpdk8.c 
 #SRCS-y += main.c mainbfBCC.c test.c 
 SRCS-y += ccoding_byte.c
 
