@@ -63,12 +63,13 @@ struct rte_mempool *mbuf_pool;
 volatile int quit = 0;
 
 long int ReadData_count = 0;
-long int GenDataAndScramble_DPDK_count = 0;
-long int BCC_encoder_DPDK_count = 0;
-long int modulate_DPDK_count = 0;
-long int Data_CSD_DPDK_count = 0;
-long int CSD_encode_DPDK_count = 0;
+long int GenDataAndScramble_count = 0;
+long int BCC_encoder_count = 0;
+long int modulate__count = 0;
+long int Data_CSD_count = 0;
+long int CSD_encode_count = 0;
 long int IFFTAndaddWindow_dpdk_count = 0;
+long int CSD_encode_DPDK_count = 0;
 int N_CBPS, N_SYM, ScrLength, valid_bits;
 
 struct timespec time1,time2,time_diff;	/** < Test the running time. >*/
@@ -88,6 +89,7 @@ static int BCC_encoder_Loop();
 static int modulate_Loop();
 static int Data_CSD_Loop();  
 static int IFFTAndaddWindow_loop();
+
 
 
 struct timespec diff(struct timespec start, struct timespec end)
@@ -132,10 +134,8 @@ static int ReadData(__attribute__((unused)) struct rte_mbuf *Data)
 	    databits[i]=datatmp&0x000000FF;
 	}
 	memcpy(rte_pktmbuf_mtod(Data,unsigned char *), databits, APEP_LEN_DPDK);
-	//memcpy(databits_temp, databits, APEP_LEN_DPDK);//Â½Â«ÃŽÃ„Â¼Ã¾Â¶ÃÃˆÂ¡ÃŠÃ½Â¾ÃÂ¸Â´Ã–Ã†Â¸Ã¸DataÂ¼Â´Ã”Â­ÃŠÂ¼ÃŠÃ½Â¾ÃÃÃ·
 	fclose(fp);
 	free(databits);
-	//free(databits_temp);
 	rte_ring_enqueue(Ring_Beforescramble, Data); //First half
 	return 0;
 }
@@ -157,6 +157,7 @@ static int BCC_encoder_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	int CodeLength = N_SYM*N_CBPS/N_STS;
 	unsigned char *data_scramble = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	unsigned char* BCCencodeout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, 0);
+
 	BCC_encoder_OPT(data_scramble, ScrLength, N_SYM, &BCCencodeout, CodeLength);
 
 	rte_ring_enqueue(Ring_BCC_2_modulation, Data_In); //First half
@@ -167,11 +168,9 @@ static int modulate_DPDK(__attribute__((unused)) struct rte_mbuf *Data_In)
 {
 	//printf("modulate_DPDK_count = %ld\n", modulate_DPDK_count++);
 	unsigned char* BCCencodeout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, 0);
-	unsigned char *stream_interweave_dataout = rte_pktmbuf_mtod_offset(Data_In, unsigned char *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
-	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
-	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
+	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
 
-	modulate_mapping(BCCencodeout, &stream_interweave_dataout, &subcar_map_data);
+	modulate_mapping(BCCencodeout, &subcar_map_data);
 
 	rte_ring_enqueue(Ring_modulation_2_CSD, Data_In);//First half
 	return 0;
@@ -182,20 +181,22 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	int i;
 	CSD_encode_DPDK_count++;
 	//printf("%ld\n", CSD_encode_DPDK_count++);//CSD_encode_DPDK_count = %ld\n
-	//complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
-	//complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
-	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
-	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
-	//Data_CSD(&subcar_map_data, N_SYM, &csd_data);
+	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 	
 	for(i=0;i<N_STS;i++){
 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
 	}
 	
-   /*
+	
 	if(CSD_encode_DPDK_count > 100000)
 	{
 		quit = 1;
+		printf("ReadData_count=%ld\n",ReadData_count);
+		printf("GenDataAndScramble_count=%ld\n",GenDataAndScramble_count);
+		printf("BCC_encoder_count=%ld\n",BCC_encoder_count);
+		printf("modulate__count=%ld\n",modulate__count);
+		printf("CSD_encode_count=%ld\n",CSD_encode_count);
 
 		clock_gettime(CLOCK_REALTIME, &time2);
 		time_diff = diff(time1,time2);
@@ -205,10 +206,10 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 		printf("Running time # %ld.%ld Seconds \n",time_diff.tv_sec, time_diff.tv_nsec);
 		//printf("%.24s %ld Nanoseconds \n", ctime(&ts.tv_sec), ts.tv_nsec); 
 	}
-	*/
-	rte_ring_enqueue(Ring_CSD_2_IFFTAndaddWindow,Data_In);
-	//rte_pktmbuf_free(Data_In);
-	//rte_mempool_put(Data_In->pool, Data_In);
+	
+	//rte_ring_enqueue(Ring_CSD_2_IFFTAndaddWindow,Data_In);
+
+	rte_mempool_put(Data_In->pool, Data_In);
 	return 0;
 }
 
@@ -216,21 +217,22 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 {
 	int i;
 	IFFTAndaddWindow_dpdk_count++;
-	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
-	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,0);
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
+	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
- 	//	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
- 	//   for(i=0;i<subcar*N_STS*N_SYM;i++)
- 	//   {
- 	//  	fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
- 	//   }
- 	//   fclose(f);	
-	//FILE *k=fopen("IFFT_data.txt","w");
-	//printStreamToFile_float(IFFT_data,5120,k);
-	//fclose(k);
+  	/*
+  	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
+    for(i=0;i<subcar*N_STS*N_SYM;i++)
+    {
+   	fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
+    }
+    fclose(f);	
+	FILE *k=fopen("IFFT_data.txt","w");
+	printStreamToFile_float(IFFT_data,5120,k);
+	fclose(k);
+	*/
 	
-	
-	if(IFFTAndaddWindow_dpdk_count> 100000)
+	if(IFFTAndaddWindow_dpdk_count> 1000)
 	{
 		quit = 1;
 		printf("IFFTAndaddWindow_dpdk_count = %ld\n", IFFTAndaddWindow_dpdk_count-1);
@@ -242,6 +244,7 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 		printf("Running time # %ld.%ld Seconds \n",time_diff.tv_sec, time_diff.tv_nsec);
 		//printf("%.24s %ld Nanoseconds \n", ctime(&ts.tv_sec), ts.tv_nsec); 
 	}
+
 
 	rte_mempool_put(Data_In->pool, Data_In);
 	return 0;
@@ -271,6 +274,7 @@ static int Data_CSD_Loop()
 	{
 		if (rte_ring_dequeue(Ring_modulation_2_CSD, &Data_In_CSD) < 0)
 		{
+			Data_CSD_count++;
 			continue;
 		}
 		else 
@@ -289,6 +293,7 @@ static int modulate_Loop()
 	{
 		if (rte_ring_dequeue(Ring_BCC_2_modulation, &Data_In_modulate) < 0)
 		{
+			modulate__count++;
 			continue;
 		}
 		else 
@@ -307,6 +312,7 @@ static int BCC_encoder_Loop()
 	{
 		if (rte_ring_dequeue(Ring_scramble_2_BCC, &Data_In_BCC) < 0)
 		{
+			BCC_encoder_count++;
 			continue;
 		}
 		else 
@@ -325,6 +331,7 @@ static int GenDataAndScramble_Loop()
 	{
 		if (rte_ring_dequeue(Ring_Beforescramble, &Data_In_Scramble) < 0)
 		{
+			GenDataAndScramble_count++;
 			continue;
 		}
 		else 
@@ -343,6 +350,7 @@ static int ReadData_Loop()
 		Data = rte_pktmbuf_alloc(mbuf_pool);
 		if (Data == NULL)
 		{
+			ReadData_count++;
 			continue;
 		}
 		else 
@@ -361,7 +369,7 @@ main(int argc, char **argv)
 {
 	const unsigned flags = 0;
 	const unsigned ring_size = 512;
-	const unsigned pool_size = 256;
+	const unsigned pool_size = 512;
 	const unsigned pool_cache = 32;
 	const unsigned priv_data_sz = 0;
 	int ret;
@@ -421,6 +429,7 @@ main(int argc, char **argv)
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
    	// 运行一次得到生成导频的分流交织表
    	initial_streamwave_table(N_SYM);
+   	init_mapping_table();
 	///////////////////////////////////////////////////////////////////////////////////
 	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);
@@ -457,14 +466,9 @@ main(int argc, char **argv)
 	rte_eal_remote_launch(ReadData_Loop, NULL,1);
 	rte_eal_remote_launch(GenDataAndScramble_Loop, NULL, 2);
 	rte_eal_remote_launch(BCC_encoder_Loop, NULL, 3);
-	//rte_eal_remote_launch(BCC_encoder_Loop, NULL,4);
-	//rte_eal_remote_launch(BCC_encoder_Loop, NULL, 5);
 	rte_eal_remote_launch(modulate_Loop, NULL, 4);
-	//rte_eal_remote_launch(modulate_Loop, NULL,7);
-	//rte_eal_remote_launch(modulate_Loop, NULL,8);
 	rte_eal_remote_launch(Data_CSD_Loop, NULL,5);
-	rte_eal_remote_launch(IFFTAndaddWindow_loop, NULL,6);
-	//Data_CSD_Loop(NULL);
+	//rte_eal_remote_launch(IFFTAndaddWindow_loop, NULL,6);
 	rte_eal_mp_wait_lcore();
 	return 0;
 }

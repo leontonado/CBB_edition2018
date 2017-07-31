@@ -28,10 +28,11 @@
 #include <rte_mbuf.h>
 
 #include <time.h> 
+#include <stdlib.h>
 
 #include "allHeaders.h"
 
-#define RUNMAINDPDK
+//#define RUNMAINDPDK
 #ifdef RUNMAINDPDK
 
 #define RTE_LOGTYPE_APP RTE_LOGTYPE_USER1
@@ -113,22 +114,25 @@ struct timespec diff(struct timespec start, struct timespec end)
      return temp;
 }
 
-static int InitData(unsigned char** p_databits)
+static int InitData(unsigned char* p_databits)
 {
-	FILE *fp=fopen("send_din_dec.txt","rt");
-	unsigned char *databits=(unsigned char*)malloc(APEP_LEN_DPDK*sizeof(unsigned char));
-	*p_databits = databits;
-	if(databits == NULL){
-		printf("error");
-		return 0;
-	}
-	unsigned int datatmp=0;
+	//FILE *fp=fopen("send_din_dec.txt","rt");
+	//unsigned char *databits=(unsigned char*)malloc(APEP_LEN_DPDK*sizeof(unsigned char));
+	//*p_databits = databits;
+	//if(databits == NULL){
+	//	printf("error");
+	//	return 0;
+	//}
+	//unsigned int datatmp=0;
 	for(int i=0;i<APEP_LEN_DPDK;i++){
-	    fscanf(fp,"%ud",&datatmp);
-	    databits[i]=datatmp&0x000000FF;
+	    //fscanf(fp,"%ud",&datatmp);
+	    //databits[i]=datatmp&0x000000FF;
+	    srand((unsigned)time(NULL));/*播种子*/
+		p_databits[i] = rand() % 255;
 	}
+	
 	//memcpy(rte_pktmbuf_mtod(Data,unsigned char *), databits, APEP_LEN_DPDK);
-	fclose(fp);
+	//fclose(fp);
 	return 0;
 }
 
@@ -377,42 +381,42 @@ static int PutInEmptyRing(struct rte_mbuf *Data,int n)
 static int ReadData_Loop() 
 {
 	struct rte_mbuf *Data =NULL;
-	unsigned char* Data_in =NULL;
+	unsigned char Data_in[APEP_LEN_DPDK];
 	void *Data_In_GenerateData=NULL;
 	int dis_count = 0;
-	int n;
-	InitData(&Data_in);
+	int n;	
 	while (!quit){
 		n=FindEmptyRing();
 		if(n!=0){
 			Data = rte_pktmbuf_alloc(mbuf_pool);
 			if (Data != NULL)
 			{
+				InitData(Data_in);
 				ReadData(Data, Data_in);
 			//ReadData_Loop_count++;
 				dis_count++;
-				if(dis_count ==12){
+				if(dis_count == 16){
 					dis_count = 0;
 				}
-				if(dis_count >= 0 && dis_count < 3){
+				if(dis_count >= 0&& dis_count < 4){
 				 if(rte_ring_full(Ring_GenerateData1)==0)
 				         rte_ring_enqueue(Ring_GenerateData1, Data);
 			      else
 			        PutInEmptyRing(Data,n);
 				}		
-				else if(dis_count >= 3&& dis_count < 6){
+				else if(dis_count >= 4&& dis_count < 8){
 					if(rte_ring_full(Ring_GenerateData2)==0)
 				        rte_ring_enqueue(Ring_GenerateData2, Data);
 			        else
 			        	PutInEmptyRing(Data,n);
 				}	
-				else if(dis_count >= 6 && dis_count < 9){
+				else if(dis_count >= 8&& dis_count < 12){
 					if(rte_ring_full(Ring_GenerateData3)==0)
 				        rte_ring_enqueue(Ring_GenerateData3, Data);
 			        else
 			         	PutInEmptyRing(Data,n);
 				}
-				else if(dis_count >=9&& dis_count < 12){
+				else if(dis_count >=12 && dis_count < 16){
 					if(rte_ring_full(Ring_GenerateData4)==0)
 				        rte_ring_enqueue(Ring_GenerateData4, Data);
 			        else
@@ -421,6 +425,7 @@ static int ReadData_Loop()
 			}
 			else if (rte_ring_dequeue(Ring_GenerateData4, &Data_In_GenerateData) >= 0)
 			{
+				
 				GenDataAndScramble_DPDK(Data_In_GenerateData);
 				BCC_encoder_DPDK(Data_In_GenerateData);
 				modulate_DPDK(Data_In_GenerateData);
@@ -431,7 +436,7 @@ static int ReadData_Loop()
 			}
 			else 
 			{
-				
+				GenerateData_Loop4_count++;
 				//usleep(100000);
 				continue;
 			}
@@ -439,14 +444,19 @@ static int ReadData_Loop()
 		else{
 			if (rte_ring_dequeue(Ring_GenerateData4, &Data_In_GenerateData) >= 0)
 			{
-				GenerateData_Loop4_count++;
+				//GenerateData_Loop4_count++;
 				GenDataAndScramble_DPDK(Data_In_GenerateData);
 				BCC_encoder_DPDK(Data_In_GenerateData);
 				modulate_DPDK(Data_In_GenerateData);
 				CSD_encode_DPDK(Data_In_GenerateData);
 				IFFTAndaddWindow_dpdk(Data_In_GenerateData);
-				rte_ring_enqueue(Ring_RetriveData4, Data_In_GenerateData);
-			
+				rte_ring_enqueue(Ring_RetriveData4, Data_In_GenerateData);			
+			}
+			else 
+			{
+				GenerateData_Loop4_count++;
+				//usleep(100000);
+				continue;
 			}
 
 		}		
@@ -479,6 +489,7 @@ main(int argc, char **argv)
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
    	// 运行一次得到生成导频的分流交织表
 	initial_streamwave_table(N_SYM);
+	init_mapping_table();
 	///////////////////////////////////////////////////////////////////////////////////
 	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);

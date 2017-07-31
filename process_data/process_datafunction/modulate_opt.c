@@ -12,6 +12,7 @@
 static int pilot_N = 8;
 static int zero_N  = 14;
 
+complex32 *subcar_map_data_table;//
 int16 *streamweave_table[N_STS]; /**< 含导频的分流交织表 */
 
 //导频位置查询
@@ -256,7 +257,51 @@ void initial_streamwave_table(int N_SYM)
 
 }
 
-void parser_stream_interweave(unsigned char *output,unsigned char **stream_interweave_dataout,int16 **stream_parser_weave_table)               //查表函数
+void init_mapping_table(void)
+{
+    int i, k;
+    int index[16] = {1,2,4,3,8,7,5,6,16,15,13,14,9,10,12,11};
+    unsigned char rate_type;
+    int N_BPSCS, N_DBPS, N_CBPS, N_ES;
+    mcs_table_for_20M(&rate_type, &N_BPSCS, &N_DBPS, &N_CBPS, &N_ES);
+    int mode = N_BPSCS/2;
+    int table_length = 1<<N_BPSCS;
+    int topThr = 0;
+    int atfThr = 0;
+    int real_j, imag_j;
+    complex32 *C;
+    subcar_map_data_table = (complex32 *)malloc(table_length*sizeof(complex32));
+    MKSUREENMEM(subcar_map_data_table);
+    memset(subcar_map_data_table, 0, table_length*sizeof(complex32));
+    switch(mode)
+    {
+        case 0: C=QAM1;
+                break;
+        case 1: C=QAM2;
+                break;
+        case 2: C=QAM4;
+                break;
+        case 3: C=QAM8;
+                break;
+        case 4: C=QAM16;
+                break;
+        default: printf("error: value of mode is wrong!");
+                 exit(1);
+    }
+
+    for(i=0; i<table_length; i++){
+        topThr = (i&0x38)>>3;
+        atfThr = (i&0x07);
+
+        imag_j = index[atfThr];
+        real_j = index[topThr];
+        k = (twice(mode)-imag_j)*twice(mode)+real_j;
+        subcar_map_data_table[i] = C[k-1];
+    }
+
+}
+
+/*void parser_stream_interweave(unsigned char *output, unsigned char **stream_interweave_dataout, int16 **stream_parser_weave_table)               //查表函数
 {
     unsigned char rate_type;
     int N_BPSCS, N_DBPS, N_CBPS, N_ES;
@@ -289,8 +334,53 @@ void parser_stream_interweave(unsigned char *output,unsigned char **stream_inter
     }
 
 }
+*/
 
+void stream_interweave_mapping(unsigned char *output, complex32 **sym_mod, int16 **stream_parser_weave_table)               //查表函数
+{
+    unsigned char rate_type;
+    int N_BPSCS, N_DBPS, N_CBPS, N_ES;
+    mcs_table_for_20M(&rate_type, &N_BPSCS, &N_DBPS, &N_CBPS, &N_ES);
+    int N_service = 16;
+    int N_tail = 6;
+    int N_SYM = ceil(((double)(8*APEP_LEN + N_service + N_tail*N_ES) / (double)N_DBPS));
+    int N_CBPSS = N_CBPS/N_STS;
+    int TableLength = N_CBPSS+pilot_N+zero_N;
+    int i,j,k,t;
+    int addr_p=0;
 
+    for(i=0; i<N_STS; i++)
+    {
+        t = 0;
+
+        for(j=0; j<TableLength*N_SYM; j++)
+        {
+           if(stream_parser_weave_table[i][j] >= 6000)
+            {
+                //sym_mod[Nov_STS][t]=pilot_type[code_out[Nov_STS][j-1]-99];
+                (*sym_mod)[i*subcar*N_SYM + t] = pilot_type[stream_parser_weave_table[i][j] - 6000];
+            }
+            else
+            {
+                addr_p = 0;
+                for(k=0; k<6; k++){
+                    addr_p = addr_p<<1;
+
+                    if(j >= TableLength)
+                        addr_p |= (output[stream_parser_weave_table[i][j + k] + N_CBPS]) & 0x01;//((*code_out)[Nov_STS*TableLength*N_SYM + j-1 + k]) & 0x01;
+                    else 
+                        addr_p |= (output[stream_parser_weave_table[i][j + k]]) & 0x01;
+                }
+                (*sym_mod)[i*subcar*N_SYM + t]  = subcar_map_data_table[addr_p];
+                j = j+5;
+            }
+            t++;          
+        }
+    }
+
+ }
+
+/*
 void __bi2de_opt(unsigned char **code_out,int mode,int num,int Nov_STS)
 {
       int j,k;
@@ -350,7 +440,51 @@ void __bi2de_opt(unsigned char **code_out,int mode,int num,int Nov_STS)
       }
 
 }
+*/
 
+void Modulation_11ax_opt(unsigned char **code_out, int mode,int num, complex32 **sym_mod,int Nov_STS)
+//stream_interweave_dataout, mode, num_2, subcar_map_data, Nov_STS
+{
+    int j = 0;
+    int t = 0;
+    int k;
+    int addr_p=0;
+    /////////////////////////////////////////////////////////////
+    int N_CBPS, N_SYM, ScrLength, valid_bits;
+    GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
+    /////////////////////////////////////////////////////////////
+    unsigned int CodeLength = N_CBPS/N_STS;
+    unsigned int TableLength = CodeLength+pilot_N+zero_N;
+
+    for(j=1;j<=num;j++)
+    {
+
+        if((*code_out)[Nov_STS*TableLength*N_SYM + j-1] > 16)
+        {
+            //sym_mod[Nov_STS][t]=pilot_type[code_out[Nov_STS][j-1]-99];
+            (*sym_mod)[Nov_STS*subcar*N_SYM + t] = pilot_type[(*code_out)[Nov_STS*TableLength*N_SYM + j-1]-99];
+        }
+        else
+        {
+            addr_p = 0;
+            for(k=0; k<6; k++){
+                addr_p = addr_p<<1;
+                addr_p |= ((*code_out)[Nov_STS*TableLength*N_SYM + j-1 + k]) & 0x01;
+            }
+            (*sym_mod)[Nov_STS*subcar*N_SYM + t]  = subcar_map_data_table[addr_p];
+            j = j+5;
+           //real_j = index[(*code_out)[Nov_STS*TableLength*N_SYM + j-1]];
+           //imag_j = index[(*code_out)[Nov_STS*TableLength*N_SYM + j]];
+           //k = (twice(mode)-imag_j)*twice(mode)+real_j;
+           ////sym_mod[Nov_STS][t] = C[k-1];
+           //(*sym_mod)[Nov_STS*subcar*N_SYM + t] = C[k-1];
+           //j++;
+        }
+        t++;
+    }
+}
+
+/*
 void __Modulation_11ax_opt(unsigned char **code_out, int mode,int num, complex32 **sym_mod,int Nov_STS)
 {
     int index[16] = {1,2,4,3,8,7,5,6,16,15,13,14,9,10,12,11};
@@ -413,7 +547,7 @@ void __Modulation_11ax_opt(unsigned char **code_out, int mode,int num, complex32
         if((*code_out)[Nov_STS*TableLength*N_SYM + j-1]>16)
         {
             //sym_mod[Nov_STS][t]=pilot_type[code_out[Nov_STS][j-1]-99];
-            (*sym_mod)[Nov_STS*subcar*N_SYM + t]=pilot_type[(*code_out)[Nov_STS*TableLength*N_SYM + j-1]-99];
+            (*sym_mod)[Nov_STS*subcar*N_SYM + t] = pilot_type[(*code_out)[Nov_STS*TableLength*N_SYM + j-1]-99];
         }
         else
         {
@@ -429,15 +563,13 @@ void __Modulation_11ax_opt(unsigned char **code_out, int mode,int num, complex32
 #endif
 
 }
+*/
 
-#ifndef DPDK_FRAME  //no  working in  dpdk frame.
+
+
+//void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interweave_dataout, complex32 **subcar_map_data)
 void modulate_mapping(unsigned char *BCC_output, complex32 **subcar_map_data)
-#else
-void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interweave_dataout, complex32 **subcar_map_data)
-#endif 
 {
-	//printf("use Optmodulate!\n");
-
     int i;
     unsigned char rate_type;
     int N_BPSCS, N_DBPS, N_CBPS, N_ES;
@@ -447,11 +579,12 @@ void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interwea
     int N_SYM = ceil(((double)(8*APEP_LEN + N_service + N_tail*N_ES) / (double)N_DBPS));
     int mode = N_BPSCS/2;
     int num =(N_CBPS/mode/N_STS+pilot_N+zero_N)*N_SYM;
+    int num_2 = (N_CBPS/N_STS+pilot_N+zero_N)*N_SYM;
     unsigned int CodeLength = N_CBPS/N_STS;
     unsigned int TableLength = CodeLength+pilot_N+zero_N;
 
-    /**< 通过查表生成分流交织后的数据块 */
-#ifndef DPDK_FRAME 
+    /**< 通过查表生成分流交织后的数据块  */
+/*#ifndef DPDK_FRAME 
    unsigned char *stream_interweave_dataout[N_STS];
     for(i=0;i<N_STS;i++)
     {
@@ -463,8 +596,9 @@ void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interwea
         }
     }
 #endif
+*/
 
-    parser_stream_interweave(BCC_output, stream_interweave_dataout, streamweave_table);
+    stream_interweave_mapping(BCC_output, subcar_map_data, streamweave_table);
 
 /*    FILE *c = fopen("stream_interweave_dataout.txt","wt");
     for(j=0;j<TableLength*N_SYM;j++)
@@ -474,7 +608,7 @@ void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interwea
         fprintf(c,"\n");
     }*/
 
-    /**< 进行调制映射 */
+/**< 进行调制映射 
     int Nov_STS;
     if(mode == 0)
     {
@@ -483,12 +617,13 @@ void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interwea
     }
     for(Nov_STS=0; Nov_STS<N_STS; Nov_STS++)
     {
-        /**< 将二进制转化为十进制 */
-        __bi2de_opt(stream_interweave_dataout, mode,num,Nov_STS);
-        /**< 星座映射和插入导频 */
-        __Modulation_11ax_opt(stream_interweave_dataout, mode, num, subcar_map_data, Nov_STS);
+        //**< 将二进制转化为十进制 
+        //__bi2de_opt(stream_interweave_dataout, mode,num,Nov_STS);
+        //**< 星座映射和插入导频 
+        //__Modulation_11ax_opt(stream_interweave_dataout, mode, num, subcar_map_data, Nov_STS);
+        Modulation_11ax_opt(stream_interweave_dataout, mode, num_2, subcar_map_data, Nov_STS);
     }
-    //modulation_mapping(stream_interweave_dataout, N_SYM, subcar_map_data, Nov_STS) ;
+
 
 #ifndef  DPDK_FRAME
    for(i=0;i<N_STS;i++)
@@ -497,6 +632,7 @@ void modulate_mapping(unsigned char *BCC_output, unsigned char **stream_interwea
        stream_interweave_dataout[i] = NULL;
    }
 #endif
+*/
 }
 
 #ifdef DEBUGMODULATIONOPT

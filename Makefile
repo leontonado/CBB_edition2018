@@ -53,6 +53,7 @@ VPATH += $(SRCDIR)/Process/process_after_csd
 # all source are stored in SRCS-y                  
 SRCS-y := maindpdk.c maindpdk2.c maindpdk3.c maindpdk4.c maindpdk5.c maindpdk6.c maindpdk7.c maindpdk8.c 
 #SRCS-y += main.c mainbfBCC.c test.c 
+SRCS-y += maindpdk_test.c maindpdk_test_2.c
 SRCS-y += ccoding_byte.c
 
 SRCS-y += ifft.c ifftShiftandIFFTPreamble.c
@@ -87,7 +88,7 @@ CFLAGS += -I$(SRCDIR)/VarINIT
 
 CFLAGS += -D OPTIMIZATION
 CFLAGS += -D AVX2
-CFLAGS += -D DPDK_FRAME
+#CFLAGS += -D DPDK_FRAME
 #CFLAGS += -g -O0
 #CFLAGS += $(WERROR_FLAGS)
 

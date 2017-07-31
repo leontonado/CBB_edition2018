@@ -660,6 +660,7 @@ main(int argc, char **argv)
 	// 初始化函数，计算OFDM符号个数，字节长度
 	//int N_CBPS, N_SYM, ScrLength, valid_bits;
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
+   	init_mapping_table();
 	///////////////////////////////////////////////////////////////////////////////////
 	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);
