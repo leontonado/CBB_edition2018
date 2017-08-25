@@ -495,21 +495,9 @@ Discarded input sections
  .note.GNU-stack
                 0x0000000000000000        0x0 /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o
  .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk.o
+                0x0000000000000000        0x0 maindpdk1.o
  .note.GNU-stack
                 0x0000000000000000        0x0 maindpdk2.o
- .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk3.o
- .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk4.o
- .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk5.o
- .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk6.o
- .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk7.o
- .note.GNU-stack
-                0x0000000000000000        0x0 maindpdk8.o
  .note.GNU-stack
                 0x0000000000000000        0x0 maindpdk_test.o
  .note.GNU-stack
@@ -1019,14 +1007,8 @@ Linker script and memory map
 LOAD /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o
 LOAD /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o
 LOAD /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o
-LOAD maindpdk.o
+LOAD maindpdk1.o
 LOAD maindpdk2.o
-LOAD maindpdk3.o
-LOAD maindpdk4.o
-LOAD maindpdk5.o
-LOAD maindpdk6.o
-LOAD maindpdk7.o
-LOAD maindpdk8.o
 LOAD maindpdk_test.o
 LOAD maindpdk_test_2.o
 LOAD ccoding_byte.o
@@ -1929,14 +1911,8 @@ LOAD /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
  .text          0x00000000004309ba        0x0 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o
  *fill*         0x00000000004309ba        0x6 
  .text          0x00000000004309c0       0xc6 /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o
- .text          0x0000000000430a86        0x0 maindpdk.o
+ .text          0x0000000000430a86        0x0 maindpdk1.o
  .text          0x0000000000430a86        0x0 maindpdk2.o
- .text          0x0000000000430a86        0x0 maindpdk3.o
- .text          0x0000000000430a86        0x0 maindpdk4.o
- .text          0x0000000000430a86        0x0 maindpdk5.o
- .text          0x0000000000430a86        0x0 maindpdk6.o
- .text          0x0000000000430a86        0x0 maindpdk7.o
- .text          0x0000000000430a86        0x0 maindpdk8.o
  .text          0x0000000000430a86        0x0 maindpdk_test.o
  .text          0x0000000000430a86     0x2341 maindpdk_test_2.o
                 0x00000000004321c4                diff
@@ -6919,14 +6895,8 @@ LOAD /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
  *fill*         0x000000000084f544        0x4 
  .data          0x000000000084f548        0x8 /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o
                 0x000000000084f548                __dso_handle
- .data          0x000000000084f550        0x0 maindpdk.o
+ .data          0x000000000084f550        0x0 maindpdk1.o
  .data          0x000000000084f550        0x0 maindpdk2.o
- .data          0x000000000084f550        0x0 maindpdk3.o
- .data          0x000000000084f550        0x0 maindpdk4.o
- .data          0x000000000084f550        0x0 maindpdk5.o
- .data          0x000000000084f550        0x0 maindpdk6.o
- .data          0x000000000084f550        0x0 maindpdk7.o
- .data          0x000000000084f550        0x0 maindpdk8.o
  .data          0x000000000084f550        0x0 maindpdk_test.o
  .data          0x000000000084f550        0x0 maindpdk_test_2.o
  .data          0x000000000084f550        0x8 ccoding_byte.o
@@ -7323,14 +7293,8 @@ LOAD /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
  .bss           0x0000000000865bc8        0x0 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o
  .bss           0x0000000000865bc8        0x0 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o
  .bss           0x0000000000865bc8        0x1 /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o
- .bss           0x0000000000865bc9        0x0 maindpdk.o
+ .bss           0x0000000000865bc9        0x0 maindpdk1.o
  .bss           0x0000000000865bc9        0x0 maindpdk2.o
- .bss           0x0000000000865bc9        0x0 maindpdk3.o
- .bss           0x0000000000865bc9        0x0 maindpdk4.o
- .bss           0x0000000000865bc9        0x0 maindpdk5.o
- .bss           0x0000000000865bc9        0x0 maindpdk6.o
- .bss           0x0000000000865bc9        0x0 maindpdk7.o
- .bss           0x0000000000865bc9        0x0 maindpdk8.o
  .bss           0x0000000000865bc9        0x0 maindpdk_test.o
  *fill*         0x0000000000865bc9        0x7 
  .bss           0x0000000000865bd0       0x8c maindpdk_test_2.o
@@ -7737,14 +7701,8 @@ LOAD /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
  *(.comment)
  .comment       0x0000000000000000       0x34 /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o
                                          0x35 (size before relaxing)
- .comment       0x0000000000000034       0x35 maindpdk.o
+ .comment       0x0000000000000034       0x35 maindpdk1.o
  .comment       0x0000000000000034       0x35 maindpdk2.o
- .comment       0x0000000000000034       0x35 maindpdk3.o
- .comment       0x0000000000000034       0x35 maindpdk4.o
- .comment       0x0000000000000034       0x35 maindpdk5.o
- .comment       0x0000000000000034       0x35 maindpdk6.o
- .comment       0x0000000000000034       0x35 maindpdk7.o
- .comment       0x0000000000000034       0x35 maindpdk8.o
  .comment       0x0000000000000034       0x35 maindpdk_test.o
  .comment       0x0000000000000034       0x35 maindpdk_test_2.o
  .comment       0x0000000000000034       0x35 ccoding_byte.o

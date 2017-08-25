@@ -33,6 +33,7 @@
 
 //#define RUNMAINDPDK
 #ifdef RUNMAINDPDK
+//This version runs in order of modules,which proceed in respective core
 
 #define RTE_LOGTYPE_APP RTE_LOGTYPE_USER1
 // #define MEMPOOL_F_SP_PUT         0x0
@@ -220,7 +221,7 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, 0);
 	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
-  	/*
+  	
   	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
     for(i=0;i<subcar*N_STS*N_SYM;i++)
     {
@@ -230,9 +231,9 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 	FILE *k=fopen("IFFT_data.txt","w");
 	printStreamToFile_float(IFFT_data,5120,k);
 	fclose(k);
-	*/
 	
-	if(IFFTAndaddWindow_dpdk_count> 1000)
+	
+	if(IFFTAndaddWindow_dpdk_count> 100)
 	{
 		quit = 1;
 		printf("IFFTAndaddWindow_dpdk_count = %ld\n", IFFTAndaddWindow_dpdk_count-1);
@@ -468,7 +469,7 @@ main(int argc, char **argv)
 	rte_eal_remote_launch(BCC_encoder_Loop, NULL, 3);
 	rte_eal_remote_launch(modulate_Loop, NULL, 4);
 	rte_eal_remote_launch(Data_CSD_Loop, NULL,5);
-	//rte_eal_remote_launch(IFFTAndaddWindow_loop, NULL,6);
+	rte_eal_remote_launch(IFFTAndaddWindow_loop, NULL,6);
 	rte_eal_mp_wait_lcore();
 	return 0;
 }
