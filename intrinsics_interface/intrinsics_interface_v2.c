@@ -11,7 +11,7 @@
 #include "../headers/commonStructure.h"
 #endif
 #define _MM_ALIGN32 __attribute__ ((aligned (32)))
-#define Matrix_H 4
+#define Matrix_H 16
 
 #ifdef DEBUGAVX2
 typedef short int16;
@@ -55,7 +55,7 @@ complex32 reduceForComplex32(complex32 ra, complex32 rb){
 }
 #endif
 
-//Matrix_Mult for 4x4
+//Matrix_Mult for (Matrix_H x Matrix_H)
 void multForMatrix(complex32 (*h)[Matrix_H],complex32* x,complex32* dest){
 	int i=0,j=0;
 	for(j=0;j<Matrix_H;j++){
@@ -120,7 +120,7 @@ void Matrix_Mult_AVX2_8(complex32 (*h)[8],complex32* x,complex32* dest){
 	int i,j;
 	for(i=0;i<4;i++){
 		for(j=0;j<16;j++){
-			a[i][j] = h[j&7][i*2+(j>>3)];
+			a[i][j] = h[ j & 7 ][i*2+(j>>3)];
 			b[i][j] = x[j&7];
 			//c[i][j].real = 0;
 			//c[i][j].imag = 0;
@@ -164,7 +164,212 @@ void Matrix_Mult_AVX2_8(complex32 (*h)[8],complex32* x,complex32* dest){
 	memcpy(dest,&temp,32);
 }
 
+//Matrix_Mult for 16x16 use avx2
+//make sure dest's data equal 0
+void Matrix_Mult_AVX2_16(complex32 (*h)[16],complex32* x,complex32* dest){
+	complex32 a[16][16];
+	complex32 b[16][16];
+	complex32 c[16][16];
 
+	int i,j;
+	for(i=0;i<16;i++){
+		for(j=0;j<16;j++){
+			a[i][j] = h[j][i];
+			b[i][j] = x[j];
+		}
+	}
+	for(i=0;i<16;i++)
+		Mult_complex32Vector_2(a[i],b[i],c[i]);
+
+	int16 c01[16] _MM_ALIGN32 = {  c[0][0].real,  c[0][0].imag,  c[1][0].real,  c[1][0].imag,  c[2][0].real,  c[2][0].imag,  c[3][0].real,  c[3][0].imag,  c[4][0].real,  c[4][0].imag,  c[5][0].real,  c[5][0].imag,  c[6][0].real,  c[6][0].imag,  c[7][0].real,  c[7][0].imag};
+	int16 c02[16] _MM_ALIGN32 = {  c[0][1].real,  c[0][1].imag,  c[1][1].real,  c[1][1].imag,  c[2][1].real,  c[2][1].imag,  c[3][1].real,  c[3][1].imag,  c[4][1].real,  c[4][1].imag,  c[5][1].real,  c[5][1].imag,  c[6][1].real,  c[6][1].imag,  c[7][1].real,  c[7][1].imag};
+	int16 c03[16] _MM_ALIGN32 = {  c[0][2].real,  c[0][2].imag,  c[1][2].real,  c[1][2].imag,  c[2][2].real,  c[2][2].imag,  c[3][2].real,  c[3][2].imag,  c[4][2].real,  c[4][2].imag,  c[5][2].real,  c[5][2].imag,  c[6][2].real,  c[6][2].imag,  c[7][2].real,  c[7][2].imag};
+	int16 c04[16] _MM_ALIGN32 = {  c[0][3].real,  c[0][3].imag,  c[1][3].real,  c[1][3].imag,  c[2][3].real,  c[2][3].imag,  c[3][3].real,  c[3][3].imag,  c[4][3].real,  c[4][3].imag,  c[5][3].real,  c[5][3].imag,  c[6][3].real,  c[6][3].imag,  c[7][3].real,  c[7][3].imag};
+	int16 c05[16] _MM_ALIGN32 = {  c[0][4].real,  c[0][4].imag,  c[1][4].real,  c[1][4].imag,  c[2][4].real,  c[2][4].imag,  c[3][4].real,  c[3][4].imag,  c[4][4].real,  c[4][4].imag,  c[5][4].real,  c[5][4].imag,  c[6][4].real,  c[6][4].imag,  c[7][4].real,  c[7][4].imag};
+	int16 c06[16] _MM_ALIGN32 = {  c[0][5].real,  c[0][5].imag,  c[1][5].real,  c[1][5].imag,  c[2][5].real,  c[2][5].imag,  c[3][5].real,  c[3][5].imag,  c[4][5].real,  c[4][5].imag,  c[5][5].real,  c[5][5].imag,  c[6][5].real,  c[6][5].imag,  c[7][5].real,  c[7][5].imag};
+	int16 c07[16] _MM_ALIGN32 = {  c[0][6].real,  c[0][6].imag,  c[1][6].real,  c[1][6].imag,  c[2][6].real,  c[2][6].imag,  c[3][6].real,  c[3][6].imag,  c[4][6].real,  c[4][6].imag,  c[5][6].real,  c[5][6].imag,  c[6][6].real,  c[6][6].imag,  c[7][6].real,  c[7][6].imag};
+	int16 c08[16] _MM_ALIGN32 = {  c[0][7].real,  c[0][7].imag,  c[1][7].real,  c[1][7].imag,  c[2][7].real,  c[2][7].imag,  c[3][7].real,  c[3][7].imag,  c[4][7].real,  c[4][7].imag,  c[5][7].real,  c[5][7].imag,  c[6][7].real,  c[6][7].imag,  c[7][7].real,  c[7][7].imag};
+	int16 c09[16] _MM_ALIGN32 = {  c[0][8].real,  c[0][8].imag,  c[1][8].real,  c[1][8].imag,  c[2][8].real,  c[2][8].imag,  c[3][8].real,  c[3][8].imag,  c[4][8].real,  c[4][8].imag,  c[5][8].real,  c[5][8].imag,  c[6][8].real,  c[6][8].imag,  c[7][8].real,  c[7][8].imag};
+	int16 c10[16] _MM_ALIGN32 = {  c[0][9].real,  c[0][9].imag,  c[1][9].real,  c[1][9].imag,  c[2][9].real,  c[2][9].imag,  c[3][9].real,  c[3][9].imag,  c[4][9].real,  c[4][9].imag,  c[5][9].real,  c[5][9].imag,  c[6][9].real,  c[6][9].imag,  c[7][9].real,  c[7][9].imag};
+	int16 c11[16] _MM_ALIGN32 = {c[0][10].real,c[0][10].imag,c[1][10].real,c[1][10].imag,c[2][10].real,c[2][10].imag,c[3][10].real,c[3][10].imag,c[4][10].real,c[4][10].imag,c[5][10].real,c[5][10].imag,c[6][10].real,c[6][10].imag,c[7][10].real,c[7][10].imag};
+	int16 c12[16] _MM_ALIGN32 = {c[0][11].real,c[0][11].imag,c[1][11].real,c[1][11].imag,c[2][11].real,c[2][11].imag,c[3][11].real,c[3][11].imag,c[4][11].real,c[4][11].imag,c[5][11].real,c[5][11].imag,c[6][11].real,c[6][11].imag,c[7][11].real,c[7][11].imag};
+	int16 c13[16] _MM_ALIGN32 = {c[0][12].real,c[0][12].imag,c[1][12].real,c[1][12].imag,c[2][12].real,c[2][12].imag,c[3][12].real,c[3][12].imag,c[4][12].real,c[4][12].imag,c[5][12].real,c[5][12].imag,c[6][12].real,c[6][12].imag,c[7][12].real,c[7][12].imag};
+	int16 c14[16] _MM_ALIGN32 = {c[0][13].real,c[0][13].imag,c[1][13].real,c[1][13].imag,c[2][13].real,c[2][13].imag,c[3][13].real,c[3][13].imag,c[4][13].real,c[4][13].imag,c[5][13].real,c[5][13].imag,c[6][13].real,c[6][13].imag,c[7][13].real,c[7][13].imag};
+	int16 c15[16] _MM_ALIGN32 = {c[0][14].real,c[0][14].imag,c[1][14].real,c[1][14].imag,c[2][14].real,c[2][14].imag,c[3][14].real,c[3][14].imag,c[4][14].real,c[4][14].imag,c[5][14].real,c[5][14].imag,c[6][14].real,c[6][14].imag,c[7][14].real,c[7][14].imag};
+	int16 c16[16] _MM_ALIGN32 = {c[0][15].real,c[0][15].imag,c[1][15].real,c[1][15].imag,c[2][15].real,c[2][15].imag,c[3][15].real,c[3][15].imag,c[4][15].real,c[4][15].imag,c[5][15].real,c[5][15].imag,c[6][15].real,c[6][15].imag,c[7][15].real,c[7][15].imag};
+		
+	int16 c17[16] _MM_ALIGN32 = {  c[8][0].real,  c[8][0].imag,  c[9][0].real,  c[9][0].imag,  c[10][0].real,  c[10][0].imag,  c[11][0].real,  c[11][0].imag,  c[12][0].real,  c[12][0].imag,  c[13][0].real,  c[13][0].imag,  c[14][0].real,  c[14][0].imag,  c[15][0].real,  c[15][0].imag};
+	int16 c18[16] _MM_ALIGN32 = {  c[8][1].real,  c[8][1].imag,  c[9][1].real,  c[9][1].imag,  c[10][1].real,  c[10][1].imag,  c[11][1].real,  c[11][1].imag,  c[12][1].real,  c[12][1].imag,  c[13][1].real,  c[13][1].imag,  c[14][1].real,  c[14][1].imag,  c[15][1].real,  c[15][1].imag};
+	int16 c19[16] _MM_ALIGN32 = {  c[8][2].real,  c[8][2].imag,  c[9][2].real,  c[9][2].imag,  c[10][2].real,  c[10][2].imag,  c[11][2].real,  c[11][2].imag,  c[12][2].real,  c[12][2].imag,  c[13][2].real,  c[13][2].imag,  c[14][2].real,  c[14][2].imag,  c[15][2].real,  c[15][2].imag};
+	int16 c20[16] _MM_ALIGN32 = {  c[8][3].real,  c[8][3].imag,  c[9][3].real,  c[9][3].imag,  c[10][3].real,  c[10][3].imag,  c[11][3].real,  c[11][3].imag,  c[12][3].real,  c[12][3].imag,  c[13][3].real,  c[13][3].imag,  c[14][3].real,  c[14][3].imag,  c[15][3].real,  c[15][3].imag};
+	int16 c21[16] _MM_ALIGN32 = {  c[8][4].real,  c[8][4].imag,  c[9][4].real,  c[9][4].imag,  c[10][4].real,  c[10][4].imag,  c[11][4].real,  c[11][4].imag,  c[12][4].real,  c[12][4].imag,  c[13][4].real,  c[13][4].imag,  c[14][4].real,  c[14][4].imag,  c[15][4].real,  c[15][4].imag};
+	int16 c22[16] _MM_ALIGN32 = {  c[8][5].real,  c[8][5].imag,  c[9][5].real,  c[9][5].imag,  c[10][5].real,  c[10][5].imag,  c[11][5].real,  c[11][5].imag,  c[12][5].real,  c[12][5].imag,  c[13][5].real,  c[13][5].imag,  c[14][5].real,  c[14][5].imag,  c[15][5].real,  c[15][5].imag};
+	int16 c23[16] _MM_ALIGN32 = {  c[8][6].real,  c[8][6].imag,  c[9][6].real,  c[9][6].imag,  c[10][6].real,  c[10][6].imag,  c[11][6].real,  c[11][6].imag,  c[12][6].real,  c[12][6].imag,  c[13][6].real,  c[13][6].imag,  c[14][6].real,  c[14][6].imag,  c[15][6].real,  c[15][6].imag};
+	int16 c24[16] _MM_ALIGN32 = {  c[8][7].real,  c[8][7].imag,  c[9][7].real,  c[9][7].imag,  c[10][7].real,  c[10][7].imag,  c[11][7].real,  c[11][7].imag,  c[12][7].real,  c[12][7].imag,  c[13][7].real,  c[13][7].imag,  c[14][7].real,  c[14][7].imag,  c[15][7].real,  c[15][7].imag};
+	int16 c25[16] _MM_ALIGN32 = {  c[8][8].real,  c[8][8].imag,  c[9][8].real,  c[9][8].imag,  c[10][8].real,  c[10][8].imag,  c[11][8].real,  c[11][8].imag,  c[12][8].real,  c[12][8].imag,  c[13][8].real,  c[13][8].imag,  c[14][8].real,  c[14][8].imag,  c[15][8].real,  c[15][8].imag};
+	int16 c26[16] _MM_ALIGN32 = {  c[8][9].real,  c[8][9].imag,  c[9][9].real,  c[9][9].imag,  c[10][9].real,  c[10][9].imag,  c[11][9].real,  c[11][9].imag,  c[12][9].real,  c[12][9].imag,  c[13][9].real,  c[13][9].imag,  c[14][9].real,  c[14][9].imag,  c[15][9].real,  c[15][9].imag};
+	int16 c27[16] _MM_ALIGN32 = {c[8][10].real,c[8][10].imag,c[9][10].real,c[9][10].imag,c[10][10].real,c[10][10].imag,c[11][10].real,c[11][10].imag,c[12][10].real,c[12][10].imag,c[13][10].real,c[13][10].imag,c[14][10].real,c[14][10].imag,c[15][10].real,c[15][10].imag};
+	int16 c28[16] _MM_ALIGN32 = {c[8][11].real,c[8][11].imag,c[9][11].real,c[9][11].imag,c[10][11].real,c[10][11].imag,c[11][11].real,c[11][11].imag,c[12][11].real,c[12][11].imag,c[13][11].real,c[13][11].imag,c[14][11].real,c[14][11].imag,c[15][11].real,c[15][11].imag};
+	int16 c29[16] _MM_ALIGN32 = {c[8][12].real,c[8][12].imag,c[9][12].real,c[9][12].imag,c[10][12].real,c[10][12].imag,c[11][12].real,c[11][12].imag,c[12][12].real,c[12][12].imag,c[13][12].real,c[13][12].imag,c[14][12].real,c[14][12].imag,c[15][12].real,c[15][12].imag};
+	int16 c30[16] _MM_ALIGN32 = {c[8][13].real,c[8][13].imag,c[9][13].real,c[9][13].imag,c[10][13].real,c[10][13].imag,c[11][13].real,c[11][13].imag,c[12][13].real,c[12][13].imag,c[13][13].real,c[13][13].imag,c[14][13].real,c[14][13].imag,c[15][13].real,c[15][13].imag};
+	int16 c31[16] _MM_ALIGN32 = {c[8][14].real,c[8][14].imag,c[9][14].real,c[9][14].imag,c[10][14].real,c[10][14].imag,c[11][14].real,c[11][14].imag,c[12][14].real,c[12][14].imag,c[13][14].real,c[13][14].imag,c[14][14].real,c[14][14].imag,c[15][14].real,c[15][14].imag};
+	int16 c32[16] _MM_ALIGN32 = {c[8][15].real,c[8][15].imag,c[9][15].real,c[9][15].imag,c[10][15].real,c[10][15].imag,c[11][15].real,c[11][15].imag,c[12][15].real,c[12][15].imag,c[13][15].real,c[13][15].imag,c[14][15].real,c[14][15].imag,c[15][15].real,c[15][15].imag};
+	//__m256i _mm256_add_epi16 (__m256i a, __m256i b)
+	//__m256i _mm256_load_si256 (__m256i const * mem_addr)
+	complex32 temp[8] _MM_ALIGN32 = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
+	__m256i temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8;
+	__m256i temp9,temp10,temp11,temp12,temp13,temp14,temp15,temp16;
+	temp1   = _mm256_load_si256((__m256i*)c01);
+	temp2   = _mm256_load_si256((__m256i*)c02);
+	temp3   = _mm256_load_si256((__m256i*)c03);
+	temp4   = _mm256_load_si256((__m256i*)c04);
+	temp5   = _mm256_load_si256((__m256i*)c05);
+	temp6   = _mm256_load_si256((__m256i*)c06);
+	temp7   = _mm256_load_si256((__m256i*)c07);
+	temp8   = _mm256_load_si256((__m256i*)c08);
+	temp9   = _mm256_load_si256((__m256i*)c09);
+	temp10 = _mm256_load_si256((__m256i*)c10);
+	temp11 = _mm256_load_si256((__m256i*)c11);
+	temp12 = _mm256_load_si256((__m256i*)c12);
+	temp13 = _mm256_load_si256((__m256i*)c13);
+	temp14 = _mm256_load_si256((__m256i*)c14);
+	temp15 = _mm256_load_si256((__m256i*)c15);
+	temp16 = _mm256_load_si256((__m256i*)c16);
+	
+	temp1 = _mm256_add_epi16(temp1,temp2);
+	temp1 = _mm256_add_epi16(temp1,temp3);
+	temp1 = _mm256_add_epi16(temp1,temp4);
+	temp1 = _mm256_add_epi16(temp1,temp5);
+	temp1 = _mm256_add_epi16(temp1,temp6);
+	temp1 = _mm256_add_epi16(temp1,temp7);
+	temp1 = _mm256_add_epi16(temp1,temp8);
+	temp1 = _mm256_add_epi16(temp1,temp9);
+	temp1 = _mm256_add_epi16(temp1,temp10);
+	temp1 = _mm256_add_epi16(temp1,temp11);
+	temp1 = _mm256_add_epi16(temp1,temp12);
+	temp1 = _mm256_add_epi16(temp1,temp13);
+	temp1 = _mm256_add_epi16(temp1,temp14);
+	temp1 = _mm256_add_epi16(temp1,temp15);
+	temp1 = _mm256_add_epi16(temp1,temp16);
+	//_mm256_store_si256(__m256i * mem_addr, __m256i a)
+
+	_mm256_store_si256((__m256i *)temp,temp1);
+	memcpy(dest,&temp,32);
+
+	complex32 temp_1[8] _MM_ALIGN32 = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
+	temp1   = _mm256_load_si256((__m256i*)c17);
+	temp2   = _mm256_load_si256((__m256i*)c18);
+	temp3   = _mm256_load_si256((__m256i*)c19);
+	temp4   = _mm256_load_si256((__m256i*)c20);
+	temp5   = _mm256_load_si256((__m256i*)c21);
+	temp6   = _mm256_load_si256((__m256i*)c22);
+	temp7   = _mm256_load_si256((__m256i*)c23);
+	temp8   = _mm256_load_si256((__m256i*)c24);
+	temp9   = _mm256_load_si256((__m256i*)c25);
+	temp10 = _mm256_load_si256((__m256i*)c26);
+	temp11 = _mm256_load_si256((__m256i*)c27);
+	temp12 = _mm256_load_si256((__m256i*)c28);
+	temp13 = _mm256_load_si256((__m256i*)c29);
+	temp14 = _mm256_load_si256((__m256i*)c30);
+	temp15 = _mm256_load_si256((__m256i*)c31);
+	temp16 = _mm256_load_si256((__m256i*)c32);
+	
+	temp1 = _mm256_add_epi16(temp1,temp2);
+	temp1 = _mm256_add_epi16(temp1,temp3);
+	temp1 = _mm256_add_epi16(temp1,temp4);
+	temp1 = _mm256_add_epi16(temp1,temp5);
+	temp1 = _mm256_add_epi16(temp1,temp6);
+	temp1 = _mm256_add_epi16(temp1,temp7);
+	temp1 = _mm256_add_epi16(temp1,temp8);
+	temp1 = _mm256_add_epi16(temp1,temp9);
+	temp1 = _mm256_add_epi16(temp1,temp10);
+	temp1 = _mm256_add_epi16(temp1,temp11);
+	temp1 = _mm256_add_epi16(temp1,temp12);
+	temp1 = _mm256_add_epi16(temp1,temp13);
+	temp1 = _mm256_add_epi16(temp1,temp14);
+	temp1 = _mm256_add_epi16(temp1,temp15);
+	temp1 = _mm256_add_epi16(temp1,temp16);
+	//_mm256_store_si256(__m256i * mem_addr, __m256i a)
+
+	_mm256_store_si256((__m256i *)temp_1,temp1);
+	memcpy(&dest[8],&temp_1,32);
+}
+
+/*
+//Matrix_Mult for 16x16 use avx2
+//make sure dest's data equal 0
+void Matrix_Mult_AVX2_16(complex32 (*h)[16],complex32* x,complex32* dest){
+	complex32 a[16][16];
+	complex32 b[16][16];
+	complex32 c[16][16];
+
+	int i,j;
+	for(i=0;i<16;i++){
+		for(j=0;j<16;j++){
+			a[i][j]=h[j][i];
+			b[i][j] = x[j];
+		}
+		Mult_complex32Vector_2(a[i],b[i],c[i]);
+	}
+	
+	int16 tt[16][16] _MM_ALIGN32={{0}};
+	int16 rr[16][16] _MM_ALIGN32={{0}};
+	int16 temp[]={1,2,3,4};
+	memcpy(temp, c[0], 8);
+	for(i=0;i<32;i++){
+		if(i<16)
+			memcpy(tt[i], c[i], 32);
+		else 
+			memcpy(rr[i-16], &(c[i-16][8]), 32);
+	}
+	Matrix_Mult_AVX2_16_aux(tt,&(dest[0]));
+	Matrix_Mult_AVX2_16_aux(rr,&(dest[8]));
+}
+
+void Matrix_Mult_AVX2_16_aux(int16 (*tt)[16],complex32* dest){
+	//use to add the answer
+	__m256i temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8;
+	__m256i temp9,temp10,temp11,temp12,temp13,temp14,temp15,temp16;
+	
+	temp1 = _mm256_load_si256((__m256i*)tt[0]);
+	temp2 = _mm256_load_si256((__m256i*)tt[1]);
+	temp3 = _mm256_load_si256((__m256i*)tt[2]);
+	temp4 = _mm256_load_si256((__m256i*)tt[3]);
+	temp5 = _mm256_load_si256((__m256i*)tt[4]);
+	temp6 = _mm256_load_si256((__m256i*)tt[5]);
+	temp7 = _mm256_load_si256((__m256i*)tt[6]);
+	temp8 = _mm256_load_si256((__m256i*)tt[7]);
+	
+	temp9  = _mm256_load_si256((__m256i*)tt[8]);
+	temp10 = _mm256_load_si256((__m256i*)tt[9]);
+	temp11 = _mm256_load_si256((__m256i*)tt[10]);
+	temp12 = _mm256_load_si256((__m256i*)tt[11]);
+	temp13 = _mm256_load_si256((__m256i*)tt[12]);
+	temp14 = _mm256_load_si256((__m256i*)tt[13]);
+	temp15 = _mm256_load_si256((__m256i*)tt[14]);
+	temp16 = _mm256_load_si256((__m256i*)tt[15]);
+	
+	temp1 = _mm256_add_epi16(temp1,temp2);
+	temp1 = _mm256_add_epi16(temp1,temp3);
+	temp1 = _mm256_add_epi16(temp1,temp4);
+	temp1 = _mm256_add_epi16(temp1,temp5);
+	temp1 = _mm256_add_epi16(temp1,temp6);
+	temp1 = _mm256_add_epi16(temp1,temp7);
+	temp1 = _mm256_add_epi16(temp1,temp8);
+	
+	temp1 = _mm256_add_epi16(temp1,temp9 );
+	temp1 = _mm256_add_epi16(temp1,temp10);
+	temp1 = _mm256_add_epi16(temp1,temp11);
+	temp1 = _mm256_add_epi16(temp1,temp12);
+	temp1 = _mm256_add_epi16(temp1,temp13);
+	temp1 = _mm256_add_epi16(temp1,temp14);
+	temp1 = _mm256_add_epi16(temp1,temp15);
+	//_mm256_store_si256(__m256i * mem_ 16 addr, __m256i a)
+	complex32 temp[8] _MM_ALIGN32 = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
+	_mm256_store_si256((__m256i *)temp,temp1);
+	memcpy(dest, temp, 32);
+}
+*/
 //#pragma pack(4)
 void Mult_complex32Vector(complex32* a, complex32* b, complex32* dest /*int lengthOfVector = 8*/){
     float a_real_v[8] _MM_ALIGN32 = { a[0].real, a[1].real, a[2].real, a[3].real, a[4].real, a[5].real, a[6].real, a[7].real };
@@ -405,7 +610,7 @@ void And_Vector_2(unsigned char* a, unsigned char* b, unsigned char* dest /*int 
 	__m512i a_real;
 	__m512i a_imag;
 	__m512i b_real;
-	__m512i b_imag;
+	CZ b_imag;
 	//__m256i _mm256_load_si256 (__m256i const * mem_addr)
 	//__m512i _mm512_load_si512 (void const* mem_addr)
 	a_real = _mm512_load_si512((__m512i*)a_real_v);
@@ -458,7 +663,7 @@ int main(int argc, char* argv[]){
 	printf("test for mult:\n");
 	test_256_float_mult();*/
 	//printf("size of complex32: %d\n",sizeof(complex32));
-	complex32* a = (complex32*)malloc(NUMBER * sizeof(complex32));
+/*	complex32* a = (complex32*)malloc(NUMBER * sizeof(complex32));
 	complex32* b = (complex32*)malloc(NUMBER * sizeof(complex32));
 	complex32* c = (complex32*)malloc(NUMBER * sizeof(complex32));
 	srand((unsigned)time(NULL));
@@ -537,7 +742,12 @@ int main(int argc, char* argv[]){
 	printf("pall times = %fs\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
 	printf("The sub answer:\n");
 	for (i = 0; i < NUMBER / 2; i++) printf("%d %d\n", c[i].real, c[i].imag);
-	
+
+	//free data
+	free(a);
+	free(b);
+	free(c);
+*/	
 	/*
 	//mult __m512i
 	complex32* a_2 = (complex32*)malloc(NUMBER_2 * sizeof(complex32));
@@ -574,11 +784,15 @@ int main(int argc, char* argv[]){
 	*/	
 	
 	//Matrix_Mult
+	printf("int = %ld byte.\n",sizeof(int));
+	printf("int16 = %ld byte.\n",sizeof(int16));
+	printf("complex32 = %ld byte.\n", sizeof(complex32));
 	complex32 h[Matrix_H][Matrix_H];
 	complex32 x[Matrix_H];
 	complex32* x_dest = (complex32*)malloc(Matrix_H * sizeof(complex32));
-	memset(x_dest,0,4*sizeof(complex32));
+	memset(x_dest,0,Matrix_H*sizeof(complex32));
 	srand((unsigned)time(NULL));
+	int i,j;
 	for(i=0;i<Matrix_H;i++){
 		for (j = 0; j < Matrix_H; j++){
 			h[i][j].real = (double)(rand() / (double)RAND_MAX) * (0x1 << 13);
@@ -591,10 +805,13 @@ int main(int argc, char* argv[]){
 	//Matrix mult __m256i
 	//normal function
 	printf("Normal function: Matrix mult\n");
-	start_time = clock();
+	clock_t start_time = clock();
+	//start_time = clock();
+	long int times;
 	for (times = 0; times < 10000000;times++)
 		multForMatrix(h,x,x_dest);
-	end_time = clock();
+	clock_t end_time = clock();
+	//end_time = clock();
 	printf("pall times = %fs\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
 	printf("The matrix mult answer:\n");
 	for (i = 0; i < Matrix_H; i++) printf("%d %d\n", x_dest[i].real, x_dest[i].imag);
@@ -603,17 +820,13 @@ int main(int argc, char* argv[]){
 	start_time = clock();
 	for (times = 0; times < 10000000; times++)
 	//Mult_complex32Vector(a, b, c);
-		Mult_Matrix_AVX2_4(h,x,x_dest);
+		Matrix_Mult_AVX2_16(h,x,x_dest);
 	end_time = clock();
 	printf("pall times = %fs\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
 	printf("The matrix mult answer:\n");
 	for (i = 0; i < Matrix_H; i++) printf("%d %d\n", x_dest[i].real, x_dest[i].imag);
 	
-	//free data
-	free(a);
-	free(b);
-	free(c);
-	
+	free(x_dest);
 	//return to main
 	return 0;
 }

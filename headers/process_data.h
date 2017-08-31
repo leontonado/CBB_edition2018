@@ -37,6 +37,7 @@ extern void PilotAdd_SubcarMap(complex32 **sym_mod, int N_SYM, complex32 **subca
 extern void Data_CSD(complex32 **subcar_map_data, int N_SYM, complex32 **csd_data);
 #ifdef AVX2
 extern void __Data_CSD_aux(complex32 **subcar_map_data, int N_SYM, complex32 **csd_data,int NTXindex);//maybe use for multi pthread
+extern void Matrix_Mult_AVX2_16(complex32 (*h)[16],complex32* x,complex32* dest);  //use for precoding
 #endif
 //IFFT
 extern void csd_data_IDFT(complex32 *csd_data, complex32 *trans_data, int N_SYM);
