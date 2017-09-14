@@ -1,7 +1,7 @@
 dep_cmdline_socket.o = \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_socket.c \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_socket.c \
  /usr/include/stdc-predef.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -48,12 +48,12 @@ dep_cmdline_socket.o = \
  /usr/include/x86_64-linux-gnu/bits/fcntl2.h /usr/include/termios.h \
  /usr/include/x86_64-linux-gnu/bits/termios.h \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_rdline.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_cirbuf.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_vt100.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_socket.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_rdline.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline.h
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_rdline.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_cirbuf.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_vt100.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_socket.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_rdline.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline.h

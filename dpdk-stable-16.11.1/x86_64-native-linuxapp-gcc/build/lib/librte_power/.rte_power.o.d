@@ -1,15 +1,15 @@
 dep_rte_power.o = \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_power/rte_power.c \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_power/rte_power.c \
  /usr/include/stdc-predef.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h /usr/include/stdint.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/stdlib.h /usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
@@ -43,20 +43,20 @@ dep_rte_power.o = \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mm_malloc.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_power/rte_power.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_power/rte_power.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/wchar.h /usr/lib/gcc/x86_64-linux-gnu/5/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_power/rte_power_acpi_cpufreq.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_power/rte_power_kvm_vm.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_power/rte_power_common.h
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_power/rte_power_acpi_cpufreq.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_power/rte_power_kvm_vm.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_power/rte_power_common.h

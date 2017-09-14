@@ -188,8 +188,9 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 	for(i=0;i<N_STS;i++){
 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
 	}
-	
-	
+	FILE *k=fopen("csd_data.txt","w");
+	printStreamToFile(csd_data,256*2*4,k);
+	/*
 	if(CSD_encode_DPDK_count > 100000)
 	{
 		quit = 1;
@@ -207,10 +208,10 @@ static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
 		printf("Running time # %ld.%ld Seconds \n",time_diff.tv_sec, time_diff.tv_nsec);
 		//printf("%.24s %ld Nanoseconds \n", ctime(&ts.tv_sec), ts.tv_nsec); 
 	}
-	
-	//rte_ring_enqueue(Ring_CSD_2_IFFTAndaddWindow,Data_In);
+	*/
+	rte_ring_enqueue(Ring_CSD_2_IFFTAndaddWindow,Data_In);
 
-	rte_mempool_put(Data_In->pool, Data_In);
+	//rte_mempool_put(Data_In->pool, Data_In);
 	return 0;
 }
 
@@ -222,12 +223,12 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
   	
-  	FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
-    for(i=0;i<subcar*N_STS*N_SYM;i++)
-    {
-   	fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
-    }
-    fclose(f);	
+  	//FILE *f=fopen("test-DataCSDbeforeIFFT.txt","w");
+    //for(i=0;i<subcar*N_STS*N_SYM;i++)
+   // {
+   	//fprintf(f,"(%hd,%hd)\n",csd_data[i].real,csd_data[i].imag);
+    //}
+    //fclose(f);	
 	FILE *k=fopen("IFFT_data.txt","w");
 	printStreamToFile_float(IFFT_data,5120,k);
 	fclose(k);

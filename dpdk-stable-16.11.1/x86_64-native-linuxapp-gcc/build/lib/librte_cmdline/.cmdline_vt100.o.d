@@ -1,7 +1,7 @@
 dep_cmdline_vt100.o = \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_vt100.c \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_vt100.c \
  /usr/include/stdc-predef.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -39,4 +39,4 @@ dep_cmdline_vt100.o = \
  /usr/include/x86_64-linux-gnu/bits/string3.h /usr/include/ctype.h \
  /usr/include/termios.h /usr/include/x86_64-linux-gnu/bits/termios.h \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_vt100.h
+ /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_vt100.h

@@ -1,7 +1,7 @@
 dep_test_cmdline.o = \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/app/test/test_cmdline.c \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/app/test/test_cmdline.c \
  /usr/include/stdc-predef.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -16,9 +16,9 @@ dep_test_cmdline.o = \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/app/test/test.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/app/test/test.h \
  /usr/include/x86_64-linux-gnu/sys/queue.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
@@ -51,7 +51,7 @@ dep_test_cmdline.o = \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mm_malloc.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h \
- /home/yujiamanong/Desktop/CBB-Transmitter/dpdk-stable-16.11.1/app/test/test_cmdline.h
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h \
+ /home/felix/projects/edition/dpdk-stable-16.11.1/app/test/test_cmdline.h

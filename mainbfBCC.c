@@ -153,14 +153,14 @@ void printStream(complex32* pData, int length){
         printForCpmlex32(*pData++);
     }
 }
-
+/*
 void printStreamToFile(complex32* pData, int length, FILE* fp){
     int n=length;
     while(n--){
-        fprintf(fp,"%d %d\r\n",pData->real,pData->imag);
+        fprintf(fp,"(%d,%d)\r\n",pData->real,pData->imag);
         ++pData;
     }
 }
-
+*/
 #endif // RUN
 
