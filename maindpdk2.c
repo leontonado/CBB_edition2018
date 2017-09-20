@@ -310,6 +310,43 @@ static int Data_sendto_RRU_loop()
 	return 0;
 }
 
+static int check_empty_Ring()
+{
+	if (rte_ring_empty(Ring_RetriveData1) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData2) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData3) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData4) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData5) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData6) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData7) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData8) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData9) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData10) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData11) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData12) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData13) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData14) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData15) == 1 ) 
+		return 1;
+	else if (rte_ring_empty(Ring_RetriveData16) == 1 ) 
+		return 1;
+	else 
+		return 0 ;			
+}
 static int Data_Retrive_Loop() 
 {
 	struct rte_mbuf *data1 = NULL;
@@ -357,7 +394,7 @@ static int Data_Retrive_Loop()
 	//get the precoding matrix
 	complex32 h[16][16];
 	srand((unsigned)time(NULL));
-	for(i=0;i<16;i++){
+	for(i=0; i<16 ; i++){
 		for (j = 0; j < 16; j++){
 			h[i][j].real = (double)(rand() / (double)RAND_MAX) * (0x1 << 13);
 			h[i][j].imag = (double)(rand() / (double)RAND_MAX) * (0x1 << 13);
@@ -365,44 +402,25 @@ static int Data_Retrive_Loop()
 	}
 
 	while (!quit)
-	{
-		data1 = rte_pktmbuf_alloc(mbuf_precode_pool);
-		if (data1 ==NULL) {
+	{		
+		while(data1 ==	NULL) {
 			usleep(100);
-			continue;
+			data1 = rte_pktmbuf_alloc(mbuf_precode_pool);
 		}
-		data2 = rte_pktmbuf_alloc(mbuf_precode_pool);
-		if (data2 ==NULL) {
+		while(data2 ==	NULL) {
 			usleep(100);
-			continue;
+			data2 = rte_pktmbuf_alloc(mbuf_precode_pool);
 		}
-		data3 = rte_pktmbuf_alloc(mbuf_precode_pool);
-		if (data1 ==NULL) {
+		while(data3 ==	NULL) {
 			usleep(100);
-			continue;
+			data3 = rte_pktmbuf_alloc(mbuf_precode_pool);
 		}
-		data4 = rte_pktmbuf_alloc(mbuf_precode_pool);
-		if (data1 ==NULL) {
+		while(data4 ==	NULL) {
 			usleep(100);
-			continue;
+			data4 = rte_pktmbuf_alloc(mbuf_precode_pool);
 		}
-		if (rte_ring_empty(Ring_RetriveData1) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData2) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData3) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData4) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData5) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData6) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData7) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData8) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData9) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData10) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData11) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData12) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData13) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData14) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData15) == 0 &&
-	    	rte_ring_empty(Ring_RetriveData16) == 0 ){
-			
+		
+		if (!check_empty_Ring()){			
 				Retrive_DPDK_count++;
 				rte_ring_dequeue(Ring_RetriveData1, &Data_User_1);
 				rte_ring_dequeue(Ring_RetriveData2, &Data_User_2);
@@ -439,9 +457,9 @@ static int Data_Retrive_Loop()
 				//Precode_processing
 				k = 0;
 				while(k<4){
-					if(k = 0) data = data1;
-						else if (k = 1) data = data2;
-						else if (k = 2) data = data3;
+					if(k == 0) data = data1;
+						else if (k == 1) data = data2;
+						else if (k == 2) data = data3;
 						else  data = data4;
 					for(i = subcar*N_SYM*N_STS/4*k;i < subcar*N_SYM*N_STS/4*(k+1);i++){
 						X[0] = *(User_1 + i);
@@ -467,6 +485,10 @@ static int Data_Retrive_Loop()
 					rte_ring_enqueue(Ring_DatatoRRU,data);
 					k++;
 				}
+				data1 = NULL ;
+				data2 = NULL ;
+				data3 = NULL ;
+				data4 = NULL ;
 				
 				/*FILE *ts =fopen("precoding_data.txt","w");
 					for(i=0;i<4;i++)
@@ -488,6 +510,7 @@ static int Data_Retrive_Loop()
 				rte_mempool_put(((struct rte_mbuf *)Data_User_15)->pool, Data_User_15);
 				rte_mempool_put(((struct rte_mbuf *)Data_User_16)->pool, Data_User_16);
 		}
+		
 		else {
 			Data_Retrive_Loop_count++;
 			usleep(1000);
