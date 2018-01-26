@@ -562,13 +562,10 @@ rte_kni_tx_burst(struct rte_kni *kni, struct rte_mbuf **mbufs, unsigned num)
 {
 	void *phy_mbufs[num];
 	unsigned int ret;
-	unsigned int i;
-
+	unsigned int i;	
 	for (i = 0; i < num; i++)
 		phy_mbufs[i] = va2pa(mbufs[i]);
-
 	ret = kni_fifo_put(kni->rx_q, phy_mbufs, num);
-
 	/* Get mbufs from free_q and then free them */
 	kni_free_mbufs(kni);
 

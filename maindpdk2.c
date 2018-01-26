@@ -143,6 +143,7 @@ struct timespec diff(struct timespec start, struct timespec end)
 
 static int InitData(unsigned char** p_databits)
 {
+	int i;
 	FILE *fp=fopen("send_din_dec.txt","rt");
 	unsigned char *databits=(unsigned char*)malloc(APEP_LEN_DPDK*sizeof(unsigned char));
 	*p_databits = databits;
@@ -151,7 +152,7 @@ static int InitData(unsigned char** p_databits)
 		return 0;
 	}
 	unsigned int datatmp=0;
-	for(int i=0;i<APEP_LEN_DPDK;i++){
+	for(i=0;i<APEP_LEN_DPDK;i++){
 	    fscanf(fp,"%ud",&datatmp);
 	    databits[i]=datatmp&0x000000FF;
 	}
@@ -232,9 +233,9 @@ static int IFFTAndaddWindow_dpdk(__attribute__((unused)) struct rte_mbuf *Data_I
 	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *,0 );
 	complex32 *IFFT_data = rte_pktmbuf_mtod_offset(Data_In,complex32 *,RTE_MBUF_DEFAULT_BUF_SIZE*15);
 	csd_data_IDFT(csd_data,IFFT_data,N_SYM);
-	FILE *k=fopen("IFFT_data.txt","w");
-	printStreamToFile_float(IFFT_data,5120,k);
-	fclose(k);
+	// FILE *k=fopen("IFFT_data.txt","w");
+	// printStreamToFile_float(IFFT_data,5120,k);
+	// fclose(k);
 	return 0;
 }
 
@@ -261,7 +262,7 @@ static int Data_Retrive_Loop()
 			usleep(10000);
 			continue;
 		}
-		if(Retrive_DPDK_count >= 100000)
+		if(Retrive_DPDK_count >= 10000)
 		{
 			quit = 1;
 			clock_gettime(CLOCK_REALTIME, &time2);
@@ -277,8 +278,8 @@ static int Data_Retrive_Loop()
 			printf("GenerateData_Loop3_count = %ld\n", GenerateData_Loop3_count);
 			printf("GenerateData_Loop4_count = %ld\n", GenerateData_Loop4_count);
 			printf("GenerateData_Loop5_count = %ld\n", GenerateData_Loop5_count);
-            printf("GenerateData_Loop6_count = %ld\n", GenerateData_Loop6_count);
-            printf("GenerateData_Loop7_count = %ld\n", GenerateData_Loop7_count);
+            			printf("GenerateData_Loop6_count = %ld\n", GenerateData_Loop6_count);
+            			printf("GenerateData_Loop7_count = %ld\n", GenerateData_Loop7_count);
 			printf("Data_Retrive_Loop_count = %ld\n", Data_Retrive_Loop_count);
 			printf("Fullring= %ld\n\n",AllRingfull);
 		}
@@ -298,7 +299,7 @@ static int GenerateData_Loop1()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData1, Data_In_GenerateData);
 		}
@@ -323,7 +324,7 @@ static int GenerateData_Loop2()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData2, Data_In_GenerateData);
 		}
@@ -348,7 +349,7 @@ static int GenerateData_Loop3()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData3, Data_In_GenerateData);
 		}
@@ -373,7 +374,7 @@ static int GenerateData_Loop4()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData4, Data_In_GenerateData);
 		}
@@ -398,7 +399,7 @@ static int GenerateData_Loop5()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData5, Data_In_GenerateData);
 		}
@@ -423,7 +424,7 @@ static int GenerateData_Loop6()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData6, Data_In_GenerateData);
 		}
@@ -447,7 +448,7 @@ static int GenerateData_Loop7()
 			GenDataAndScramble_DPDK(Data_In_GenerateData);
 			BCC_encoder_DPDK(Data_In_GenerateData);
 			modulate_DPDK(Data_In_GenerateData);
-			CSD_encode_DPDK(Data_In_GenerateData);
+			//CSD_encode_DPDK(Data_In_GenerateData);
 			//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			rte_ring_enqueue(Ring_RetriveData7, Data_In_GenerateData);
 		}
@@ -597,7 +598,7 @@ static int ReadData_Loop()
 			    GenDataAndScramble_DPDK(Data_In_GenerateData);
 			    BCC_encoder_DPDK(Data_In_GenerateData);
 			    modulate_DPDK(Data_In_GenerateData);
-			    CSD_encode_DPDK(Data_In_GenerateData);
+			    //CSD_encode_DPDK(Data_In_GenerateData);
 			  	//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			    rte_ring_enqueue(Ring_RetriveData8, Data_In_GenerateData);
 		    }
@@ -618,7 +619,7 @@ static int ReadData_Loop()
 			    GenDataAndScramble_DPDK(Data_In_GenerateData);
 			    BCC_encoder_DPDK(Data_In_GenerateData);
 			    modulate_DPDK(Data_In_GenerateData);
-			    CSD_encode_DPDK(Data_In_GenerateData);
+			    //CSD_encode_DPDK(Data_In_GenerateData);
 			  	//IFFTAndaddWindow_dpdk(Data_In_GenerateData);
 			    rte_ring_enqueue(Ring_RetriveData8, Data_In_GenerateData);
 	    	}
@@ -636,7 +637,7 @@ int
 main(int argc, char **argv)
 {
 	const unsigned flags = 0;
-	const unsigned ring_size = 256;
+	const unsigned ring_size = 512;
 	const unsigned pool_size = 256;
 	const unsigned pool_cache = 128;
 	const unsigned priv_data_sz = 0;
@@ -682,21 +683,38 @@ main(int argc, char **argv)
 	Ring_RetriveData8 = rte_ring_create(RetriveData8 , ring_size, rte_socket_id(), RING_F_SP_ENQ|RING_F_SC_DEQ);
 
 	if (Ring_GenerateData1 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting  Ring_GenerateData1\n");
 	if (Ring_GenerateData2 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData2\n");
 	if (Ring_GenerateData3 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData3\n");
 	if (Ring_GenerateData4 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData4\n");
+	if (Ring_GenerateData5 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData5\n");
+	if (Ring_GenerateData6 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData6\n");
+	if (Ring_GenerateData7 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData7\n");
+	if (Ring_GenerateData8 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_GenerateData8\n");
+
 	if (Ring_RetriveData1 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData1\n");
 	if (Ring_RetriveData2 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData2\n");
 	if (Ring_RetriveData3 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData3\n");
 	if (Ring_RetriveData4 == NULL)
-		rte_exit(EXIT_FAILURE, "Problem getting sending ring\n");
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData4\n");
+	if (Ring_RetriveData5 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData5\n");
+	if (Ring_RetriveData6 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData6\n");
+	if (Ring_RetriveData7 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData7\n");
+	if (Ring_RetriveData8 == NULL)
+		rte_exit(EXIT_FAILURE, "Problem getting Ring_RetriveData8\n");
 
 	/* Creates a new mempool in memory to hold the mbufs. */
 	mbuf_pool = rte_pktmbuf_pool_create("MBUF_POOL", NUM_MBUFS,

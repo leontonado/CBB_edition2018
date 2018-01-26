@@ -3,7 +3,7 @@
 
 #include "../headers/commonStructure.h"
 #include "../../headers/integerTypeDef.h"
-#define N_STS 4
+#define N_STS 1
 #define N_TX 4
 #define N_RX 4
 #define PI 3.14159265359;

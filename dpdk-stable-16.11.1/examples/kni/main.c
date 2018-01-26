@@ -873,6 +873,7 @@ main(int argc, char** argv)
 
 	/* Get number of ports found in scan */
 	nb_sys_ports = rte_eth_dev_count();
+	//printf("%d\n",nb_sys_ports);
 	if (nb_sys_ports == 0)
 		rte_exit(EXIT_FAILURE, "No supported Ethernet device found\n");
 

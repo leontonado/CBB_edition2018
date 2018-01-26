@@ -50,8 +50,9 @@ VPATH += $(SRCDIR)/process_data/process_datafunction
 VPATH += $(SRCDIR)/typeDef
 VPATH += $(SRCDIR)/VarINIT
 VPATH += $(SRCDIR)/Process/process_after_csd
+VPATH += $(SRCDIR)/kni
 # all source are stored in SRCS-y                  
-SRCS-y := maindpdk1.c maindpdk2.c 
+SRCS-y := maindpdk1.c maindpdk2.c maindpdk3.c maindpdk4.c
 #SRCS-y += mainbfBCC.c  
 SRCS-y += maindpdk_test.c maindpdk_test_2.c
 SRCS-y += ccoding_byte.c
@@ -75,7 +76,7 @@ SRCS-y += ifftShiftandIFFTData.c addCPforData.c csd_data_IDFT.c
 SRCS-y += commonStructure.c
 
 SRCS-y += globalVarINIT.c
-
+SRCS-y += kni_module.c
 CFLAGS += -O1
 CFLAGS += -I$(SRCDIR)/BCCencode
 CFLAGS += -I$(SRCDIR)/IFFT
@@ -85,11 +86,11 @@ CFLAGS += -I$(SRCDIR)/process_data
 CFLAGS += -I$(SRCDIR)/process_data/process_datafunction
 CFLAGS += -I$(SRCDIR)/typeDef
 CFLAGS += -I$(SRCDIR)/VarINIT
-
+CFLAGS += -I$(SRCDIR)/kni
 CFLAGS += -D OPTIMIZATION
 CFLAGS += -D AVX2
 #CFLAGS += -D DPDK_FRAME
-#CFLAGS += -g -O0
+CFLAGS += -g -O0
 #CFLAGS += $(WERROR_FLAGS)
 
 #LDLIBS += -L$(subst main,print_abcd,$(RTE_OUTPUT))/lib

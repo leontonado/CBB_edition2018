@@ -314,9 +314,10 @@ kni_net_rx_normal(struct kni_dev *kni)
 
 	/* Calculate the number of entries to dequeue from rx_q */
 	num_rx = min_t(uint32_t, num_fq, MBUF_BURST_SZ);
-
+	//printk("num_rx 1=%d\n",num_rx);
 	/* Burst dequeue from rx_q */
 	num_rx = kni_fifo_get(kni->rx_q, kni->pa, num_rx);
+	//printk("num_rx 2=%d\n",num_rx);
 	if (num_rx == 0)
 		return;
 
@@ -324,6 +325,7 @@ kni_net_rx_normal(struct kni_dev *kni)
 	for (i = 0; i < num_rx; i++) {
 		kva = pa2kva(kni->pa[i]);
 		len = kva->pkt_len;
+		printk("pkt_len=%d\n",len);
 		data_kva = kva2data_kva(kva);
 		kni->va[i] = pa2va(kni->pa[i], kva);
 
@@ -333,7 +335,7 @@ kni_net_rx_normal(struct kni_dev *kni)
 			kni->stats.rx_dropped++;
 			continue;
 		}
-
+		printk("data_kva first data is %d\n",*(char *)data_kva);
 		/* Align IP on 16B boundary */
 		skb_reserve(skb, 2);
 
@@ -360,6 +362,7 @@ kni_net_rx_normal(struct kni_dev *kni)
 		skb->ip_summed = CHECKSUM_UNNECESSARY;
 
 		/* Call netif interface */
+		printk("first data is %d\n",*((char*)skb->data+3));
 		netif_rx_ni(skb);
 
 		/* Update statistics */
