@@ -270,6 +270,7 @@ static int Data_Distribute_Loop()
 	void *Data_User_1,*Data_User_2,*Data_User_3,*Data_User_4,*Data_User_5,*Data_User_6,*Data_User_7,*Data_User_8;
 	complex32 *User_1,*User_2,*User_3,*User_4,*User_5,*User_6,*User_7,*User_8,*dest;
 	int i,j,fragment_length;
+	FILE *fp = fopen("fragment0.txt", "wb+");
 	while (!quit)
 	{
 
@@ -302,12 +303,12 @@ static int Data_Distribute_Loop()
 				}
 				dest = rte_pktmbuf_mtod(data, complex32 *);
 				*(char *)dest= User_Num;
-				*(char *)(dest+1) = 0 ; 		//0 represents data
-				*(char *)(dest+2) = i + 1; 		//segment sequence num 
-				*(char *)(dest+3) = Fragment_Num; //total segment num
-				*(int16*)(dest+4) = fragment_length*4; //fragment length
-				*(int16*)(dest+6) = subcar*N_SYM*N_STS*4;//total length
-				dest = rte_pktmbuf_mtod_offset(data, complex32 *, 2);
+				*((char *)dest+1) = 0 ; 		//0 represents data
+				*((char *)dest+2) = i + 1; 		//segment sequence num 
+				*((char *)dest+3) = Fragment_Num; //total segment num
+				*((int16*)dest+2) = fragment_length*4; //fragment length
+				*((int16*)dest+3) = subcar*N_SYM*N_STS*4;//total length
+				dest += 2;
 				for(j=0;j<fragment_length;j++)
 				{
 					*(dest+User_Num*j) = *(User_1+j+fragment_length*i);
@@ -319,6 +320,8 @@ static int Data_Distribute_Loop()
 					*(dest+6+User_Num*j) = *(User_7+j+fragment_length*i);
 					*(dest+7+User_Num*j) = *(User_8+j+fragment_length*i);
 				}
+				fwrite(rte_pktmbuf_mtod(data, complex32 *), sizeof(char),4096+8 , fp);
+
 				rte_mempool_put(((struct rte_mbuf *)data)->pool,data);
 				data = NULL;
 
@@ -370,6 +373,7 @@ static int Data_Distribute_Loop()
 
 
 	}
+	fclose(fp);
 	return 0;
 }
 

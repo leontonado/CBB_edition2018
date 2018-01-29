@@ -284,6 +284,7 @@ static int Data_Distribute_Loop()
 	void *Data_User_1,*Data_User_2,*Data_User_3,*Data_User_4,*Data_User_5,*Data_User_6,*Data_User_7,*Data_User_8;
 	complex32 *User_1,*User_2,*User_3,*User_4,*User_5,*User_6,*User_7,*User_8,*dest;
 	int i,j,fragment_length;
+
 	while (!quit)
 	{
 
@@ -315,14 +316,15 @@ static int Data_Distribute_Loop()
 				usleep(100);
 				data = rte_pktmbuf_alloc(pktmbuf_pool);
 				}
+				data->pkt_len = fragment_length *User_Num*4+8;
 				dest = rte_pktmbuf_mtod(data, complex32 *);
 				*(char *)dest= User_Num;
-				*(char *)(dest+1) = 0 ; 		                                                           //        0 represents data
-				*(char *)(dest+2) = i + 1; 		                                             //        segment sequence num 
-				*(char *)(dest+3) = Fragment_Num;                                                    //        total segment num
-				*(int16*)(dest+4) = fragment_length*4;                                //        fragment length
-				*(int16*)(dest+6) = subcar*N_SYM*N_STS*4;                      //       total length(unit : byte)
-				dest = rte_pktmbuf_mtod_offset(data, complex32 *, 2);
+				*((char *)dest+1) = 0 ; 		                                                           //        0 represents data
+				*((char *)dest+2) = i + 1; 		                                             //        segment sequence num 
+				*((char *)dest+3) = Fragment_Num;                                                     //        total segment num
+				*((int16*)dest+2) = fragment_length*4;                                //        fragment length
+				*((int16*)dest+3) = subcar*N_SYM*N_STS*4;                      //       total length(unit : byte)
+				dest+=2;
 				for(j=0;j<fragment_length;j++)
 				{
 					*(dest+User_Num*j) = *(User_1+j+fragment_length*i);
@@ -333,9 +335,9 @@ static int Data_Distribute_Loop()
 					*(dest+5+User_Num*j) = *(User_6+j+fragment_length*i);
 					*(dest+6+User_Num*j) = *(User_7+j+fragment_length*i);
 					*(dest+7+User_Num*j) = *(User_8+j+fragment_length*i);
-				}
+				}    
 				 //----------transmit to kernel module--------//
-				data->pkt_len = fragment_length *User_Num*4;
+				
 				rte_ring_enqueue(Ring_Send2kernel,data);
 				Data_Distribute_count++;
 				data =NULL;
@@ -356,7 +358,7 @@ static int Data_Distribute_Loop()
 			usleep(1000);
 			continue;
 		}
-		if(Data_Distribute_count >= 100)
+		if(Data_Distribute_count >= 10)
 		{
 			quit = 1;
 			clock_gettime(CLOCK_REALTIME, &time2);
@@ -386,7 +388,6 @@ static int Data_Distribute_Loop()
 static int GenerateData_Loop1() 
 {
 	void *Data_In_GenerateData=NULL;
-	printf("a\n");
 	while (!quit)
 	{
 		if (rte_ring_dequeue(Ring_GenerateData1, &Data_In_GenerateData) >= 0)
@@ -767,7 +768,7 @@ static void kni_ingress(struct kni_port_params *p)
 		{
 			usleep(100);
 		}
-		//printf("Second is %d\n",*(rte_pktmbuf_mtod((struct rte_mbuf *)Data_In_Ring,char *)+1));
+		printf("The forth is %d\n",*(rte_pktmbuf_mtod((struct rte_mbuf *)Data_In_Ring,char *)+3));
 		pkts_burst = (struct rte_mbuf *)Data_In_Ring;
 		/* Burst tx to kni */
 		num = rte_kni_tx_burst(p->kni[i], &pkts_burst, 1);
