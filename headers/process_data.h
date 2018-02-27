@@ -21,7 +21,7 @@ extern void GenDataAndScramble(unsigned char *data_scramble, int ScrLength, unsi
 //BCC±àÂë
 extern void BCC_encoder(unsigned char *data_scramble, int ScrLength, int N_SYM, unsigned char **code_out, int CodeLength);
 #ifdef OPTIMIZATION
-extern void Creatnewchart();
+extern void Creatnewchart(void);
 extern void BCC_encoder_OPT(unsigned char *data_scramble, int ScrLength, int N_SYM, unsigned char **code_out, int CodeLength);
 #endif
 //µ÷ÖÆº¯Êý

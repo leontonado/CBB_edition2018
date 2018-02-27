@@ -3,7 +3,7 @@
 
 #include "../headers/commonStructure.h"
 #include "../../headers/integerTypeDef.h"
-#define N_STS 4
+#define N_STS 1
 #define N_TX 4
 #define N_RX 4
 #define PI 3.14159265359;
@@ -34,17 +34,24 @@ extern int pilot_index[8];
 extern complex32* P[8];
 extern int* shiftTableForHeLTF[8];
 
+
+extern complex32 *pSTF ;
+extern complex32 *pLTF ;
+extern complex32 *pL_SIG; 
+extern complex32 *pR_SIG;
+extern complex32 *SIGA1;
+extern complex32 *SIGA2;
 //one stream of preamble
 extern complex32* oneStreamOfSTF[N_TX];
 extern complex32* oneStreamOfLTF[N_TX];
 extern complex32* oneStreamOfSig[N_TX];
 //data
+
 //Preamble and HeLTF
 extern complex32* STF[N_TX];
 extern complex32* LTF[N_TX];
 extern complex32* Sig[N_TX];
 extern complex32* heLTF[N_TX];
-//data
 extern int subcar;
 extern int N_tone;
 extern int N_pilot;

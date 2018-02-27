@@ -1,7 +1,7 @@
 dep_i40e_ethdev_vf.o = \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_ethdev_vf.c \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_ethdev_vf.c \
  /usr/include/stdc-predef.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/x86_64-linux-gnu/sys/queue.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -31,8 +31,8 @@ dep_i40e_ethdev_vf.o = \
  /usr/include/x86_64-linux-gnu/bits/environments.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/x86_64-linux-gnu/bits/unistd.h /usr/include/inttypes.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/sys/types.h /usr/include/time.h \
@@ -56,34 +56,34 @@ dep_i40e_ethdev_vf.o = \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mm_malloc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_debug.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_interrupts.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_interrupts.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_pci.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_dev.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memory.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memzone.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eal.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_debug.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_interrupts.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_interrupts.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_pci.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_dev.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memory.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memzone.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eal.h \
  /usr/include/sched.h /usr/include/x86_64-linux-gnu/bits/sched.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_per_lcore.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_per_lcore.h \
  /usr/include/pthread.h /usr/include/x86_64-linux-gnu/bits/setjmp.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_alarm.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ether.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memcpy.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_vect.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_alarm.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ether.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memcpy.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_vect.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/x86intrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/ia32intrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/pmmintrin.h \
@@ -133,46 +133,46 @@ dep_i40e_ethdev_vf.o = \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xsavesintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xsavecintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mwaitxintrin.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_random.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_mbuf.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_mempool.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_spinlock.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_spinlock.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_lcore.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_launch.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_rtm.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_cpuflags.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_cpuflags.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ring.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_prefetch.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_prefetch.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_mbuf_ptype.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ethdev.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_devargs.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ether.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_dev_info.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_malloc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_logs.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_prototype.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_type.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_status.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_osdep.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/../i40e_logs.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_register.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_adminq.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_adminq_cmd.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_hmc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_lan_hmc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_devids.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_alloc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_virtchnl.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_adminq_cmd.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_type.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_rxtx.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_ethdev.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_time.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_kvargs.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_pf.h
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_random.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_mbuf.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_mempool.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_spinlock.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_spinlock.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_lcore.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_launch.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_rtm.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_cpuflags.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_cpuflags.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ring.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_prefetch.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/generic/rte_prefetch.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_mbuf_ptype.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ethdev.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_devargs.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_ether.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_dev_info.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_malloc.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_logs.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_prototype.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_type.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_status.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_osdep.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/../i40e_logs.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_register.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_adminq.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_adminq_cmd.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_hmc.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_lan_hmc.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_devids.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_alloc.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_virtchnl.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_adminq_cmd.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/base/i40e_type.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_rxtx.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_ethdev.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_time.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_kvargs.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/drivers/net/i40e/i40e_pf.h

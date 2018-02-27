@@ -15,7 +15,7 @@ void csdForHeLTF(complex32* pStreamBfcsd, complex32* pStreamAfcsd, int NTXindex,
      }
 }
 #else
-void initcsdTableForHeLTF(){
+void initcsdTableForHeLTF(void){
 	//printf("init csdTable For Preamble!\n");
 	int NTXindex=0;
 	for(NTXindex=0;NTXindex<4;NTXindex++){

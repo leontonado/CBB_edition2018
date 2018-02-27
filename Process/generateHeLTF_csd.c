@@ -30,12 +30,12 @@ void generateHeLTF_csd(complex32* pHeLTFStart,int NTX_index,int n_ltf){
         }
     }
      //for test
-     /*FILE* fp=fopen("HeLTFbeforeCSD.txt","w");
-     printStreamToFile(pbeforeCSD,n_ltf*256,fp);
-     fclose(fp);*/
+     // FILE* fp=fopen("HeLTFbeforeCSD.txt","w");
+     // printStreamToFile(pbeforeCSD,n_ltf*256,fp);
+     // fclose(fp);
      //for test
-     for(i=0;i<n_ltf;i++)
-         csdForHeLTF(pbeforeCSD+i*256, pHeLTFStart+i*256, NTX_index, 256);
-     //free data
-     free(pbeforeCSD);
+     // for(i=0;i<n_ltf;i++)
+     //     csdForHeLTF(pbeforeCSD+i*256, pHeLTFStart+i*256, NTX_index, 256);
+     // //free data
+     // free(pbeforeCSD);
 }

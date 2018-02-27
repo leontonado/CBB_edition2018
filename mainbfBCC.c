@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
 	        Sig[i]=(complex32*)malloc(64*sizeof(complex32));
 	        MKSUREENMEM(STF[i]);
 	        MKSUREENMEM(LTF[i]);
-	        MKSUREENMEM(Sig[i])
+	        MKSUREENMEM(Sig[i]);
 	        memset(STF[i],0,64*sizeof(complex32));
 	        memset(LTF[i],0,64*sizeof(complex32));
 	        memset(Sig[i],0,64*sizeof(complex32));
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-int numberOfHeLTF(){
+int numberOfHeLTF(void){
     int ntx=N_TX;
     if(!(ntx&(ntx-1))) return ntx;
     else return ntx+1;

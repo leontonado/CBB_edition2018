@@ -31,6 +31,8 @@
 
 #include "allHeaders.h"
 
+/*     maindpdk_test and maindpdk_test_2 run in the order of function of data process ,which are just for the performance comparing      */
+
 //#define RUNMAINDPDK
 #ifdef RUNMAINDPDK
 

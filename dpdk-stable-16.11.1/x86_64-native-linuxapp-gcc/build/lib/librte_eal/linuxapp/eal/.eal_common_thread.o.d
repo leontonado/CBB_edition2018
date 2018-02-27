@@ -1,7 +1,7 @@
 dep_eal_common_thread.o = \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_eal/common/eal_common_thread.c \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_eal/common/eal_common_thread.c \
  /usr/include/stdc-predef.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -44,14 +44,14 @@ dep_eal_common_thread.o = \
  /usr/include/string.h /usr/include/x86_64-linux-gnu/bits/string.h \
  /usr/include/x86_64-linux-gnu/bits/string2.h \
  /usr/include/x86_64-linux-gnu/bits/string3.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_lcore.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_per_lcore.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eal.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_launch.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memory.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_lcore.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_per_lcore.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_eal.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_launch.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memory.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/ctype.h /usr/include/errno.h \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
@@ -67,5 +67,5 @@ dep_eal_common_thread.o = \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mm_malloc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_eal/common/eal_thread.h
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_eal/common/eal_thread.h

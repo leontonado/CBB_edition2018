@@ -1,7 +1,7 @@
 dep_cmdline_rdline.o = \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_rdline.c \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_rdline.c \
  /usr/include/stdc-predef.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -41,7 +41,7 @@ dep_cmdline_rdline.o = \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/ctype.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_cirbuf.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_rdline.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_cirbuf.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_vt100.h
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_cirbuf.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_rdline.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_cirbuf.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_vt100.h

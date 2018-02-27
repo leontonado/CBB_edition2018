@@ -10,7 +10,7 @@ unsigned char GetBit(unsigned char buf, int n);  //have been tested
 
 #ifdef OPTIMIZATION
 Scramble_t ChartTable[256][128];
-void Creatnewchart()
+void Creatnewchart(void)
 {
 	//printf("use OPT scramble!\n");
 	void __GenDataAndScramble_aux(unsigned char *data_scramble, unsigned char databits, unsigned char Reg,unsigned char *Reg_out);

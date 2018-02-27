@@ -1,7 +1,7 @@
 dep_test_memory.o = \
- /home/felix/projects/edition/dpdk-stable-16.11.1/app/test/test_memory.c \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/app/test/test_memory.c \
  /usr/include/stdc-predef.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -18,10 +18,10 @@ dep_test_memory.o = \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memory.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_memory.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
@@ -52,8 +52,8 @@ dep_test_memory.o = \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/mm_malloc.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/app/test/test.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/app/test/test.h \
  /usr/include/x86_64-linux-gnu/sys/queue.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h

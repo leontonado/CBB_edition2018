@@ -1,7 +1,7 @@
 dep_rte_cfgfile.o = \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cfgfile/rte_cfgfile.c \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cfgfile/rte_cfgfile.c \
  /usr/include/stdc-predef.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -35,5 +35,5 @@ dep_rte_cfgfile.o = \
  /usr/include/xlocale.h /usr/include/x86_64-linux-gnu/bits/string.h \
  /usr/include/x86_64-linux-gnu/bits/string2.h \
  /usr/include/x86_64-linux-gnu/bits/string3.h /usr/include/ctype.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cfgfile/rte_cfgfile.h
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cfgfile/rte_cfgfile.h

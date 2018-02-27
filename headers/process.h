@@ -37,9 +37,10 @@ extern int tcsTableForPreamble(int Ntxindex);//change to tcd
 extern complex32 expComlex32(float phase, int i);
 
 extern void csdForHeLTF(complex32* pStreamBfcsd, complex32* pStreamAfcsd, int NTXindex, int length);
-extern int numberOfHeLTF();
-extern void generatePreambleAndHeLTF_csd();
-extern void initcsdTableForHeLTF();
+extern int numberOfHeLTF(void);
+extern void generatePreambleAndHeLTF_csd(void);
+extern void generatePreamble_withSigA1();
+extern void initcsdTableForHeLTF(void);
 //add CP&window
 extern void addCPforPreamble(complex32* pAfterIFFT,
                              complex32* pBeforeAddWin,
@@ -51,14 +52,15 @@ extern void addCPforSig(complex32* pAfterIFFT,
 
 extern void generateBasicSig(complex32* basicSig,
                              unsigned char* SigInfo, int length);
+extern void generateSigA(complex32 *SigA1,complex32 *SigA2,unsigned char *SigABefore);
 
-extern void ccodedot11_init();
+extern void ccodedot11_init(void);
 extern void ccodedot11_encode (unsigned int numbytes,
 		                       unsigned char *inPtr,
 		                       unsigned char *outPtr,
                                unsigned char puncturing);
 #ifdef OPTIMIZATION
-extern void init_BCCencode_table();
+extern void init_BCCencode_table(void);
 extern void check_BCCcode(unsigned int numbytes,
 		   unsigned char *inPtr,
 		   unsigned char *outPtr,

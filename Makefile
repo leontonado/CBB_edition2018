@@ -51,7 +51,7 @@ VPATH += $(SRCDIR)/typeDef
 VPATH += $(SRCDIR)/VarINIT
 VPATH += $(SRCDIR)/Process/process_after_csd
 # all source are stored in SRCS-y                  
-SRCS-y := maindpdk1.c maindpdk2.c 
+SRCS-y := maindpdk1.c maindpdk2.c maindpdk3.c maindpdk4.c maindpdk6.c
 #SRCS-y += mainbfBCC.c  
 SRCS-y += maindpdk_test.c maindpdk_test_2.c
 SRCS-y += ccoding_byte.c
@@ -85,11 +85,14 @@ CFLAGS += -I$(SRCDIR)/process_data
 CFLAGS += -I$(SRCDIR)/process_data/process_datafunction
 CFLAGS += -I$(SRCDIR)/typeDef
 CFLAGS += -I$(SRCDIR)/VarINIT
+#CFLAGS += $(WERROR_FLAGS)
 
 CFLAGS += -D OPTIMIZATION
 CFLAGS += -D AVX2
 #CFLAGS += -D DPDK_FRAME
-CFLAGS += -g -O0
+#CFLAGS += -g -O0
+#在编译程序的过程中通过增加多线程(-Ofast)和向量指令(-msse2 –mavx2)的编译条件加速
+#CFLAGS += -Ofast -msse2 –mavx2
 #CFLAGS += $(WERROR_FLAGS)
 
 #LDLIBS += -L$(subst main,print_abcd,$(RTE_OUTPUT))/lib

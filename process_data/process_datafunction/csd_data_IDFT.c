@@ -121,7 +121,7 @@ void csd_data_IDFT(complex32 *csd_data, complex32 *trans_data, int N_SYM)
 void printStreamToFile_float(complex32* pData, int length, FILE* fp){
     int n=length;
     while(n--){
-        fprintf(fp,"%f %f\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
+        fprintf(fp,"(%f,%f)\r\n",((float)pData->real)/8192,((float)pData->imag)/8192);
         ++pData;
     }
 }

@@ -262,7 +262,7 @@ unsigned char endstate;
 }BCCTable[256][128];*/
 BCCStruct_t BCCTable[256][128];
 
-void init_BCCencode_table()
+void init_BCCencode_table(void)
 {
     ccodedot11_init();
     int i;

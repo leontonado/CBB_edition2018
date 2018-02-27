@@ -1,7 +1,7 @@
 dep_cmdline_parse_num.o = \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse_num.c \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse_num.c \
  /usr/include/stdc-predef.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -28,7 +28,7 @@ dep_cmdline_parse_num.o = \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse_num.h \
- /home/felix/projects/edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/lib/librte_cmdline/cmdline_parse_num.h \
+ /home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/include/cmdline_parse.h

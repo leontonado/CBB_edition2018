@@ -11,7 +11,7 @@
 #include "../headers/commonStructure.h"
 #endif
 #define _MM_ALIGN32 __attribute__ ((aligned (32)))
-#define Matrix_H 16
+#define Matrix_H 8
 
 #ifdef DEBUGAVX2
 typedef short int16;
@@ -110,6 +110,8 @@ void Mult_Matrix_AVX2_4(complex32 (*h)[4],complex32* x,complex32* dest){
 	return;
 }
 
+
+
 //Matrix_Mult for 8x8 use avx2
 //make sure dest's data equal 0
 void Matrix_Mult_AVX2_8(complex32 (*h)[8],complex32* x,complex32* dest){
@@ -164,22 +166,81 @@ void Matrix_Mult_AVX2_8(complex32 (*h)[8],complex32* x,complex32* dest){
 	memcpy(dest,&temp,32);
 }
 
+//Matrix_Mult for 8x8 use avx2
+//make sure dest's data equal 0
+void Matrix_Mult_AVX2_8_opt(complex32 (*h)[8], complex32* x, complex32* dest, char h_updating){
+	static complex32 a[4][16];
+	complex32 b[16];
+	complex32 c[4][16];
+
+	memcpy(&b[0], x, 32);
+	memcpy(&b[8], x, 32);
+	int i,j;
+	for(i=0;i<4;i++){
+		if(h_updating == 1){
+			for(j=0;j<16;j++){
+				a[i][j] = h[ j & 7 ][i*2+(j>>3)];
+			}
+			//b[i][j] = x[j&7];
+		}
+		Mult_complex32Vector_2(a[i], b, c[i]);
+	}
+
+	int16 c1[16] _MM_ALIGN32 = {c[0][0].real,c[0][0].imag,c[0][8].real,c[0][8].imag,c[1][0].real,c[1][0].imag,c[1][8].real,c[1][8].imag,c[2][0].real,c[2][0].imag,c[2][8].real,c[2][8].imag,c[3][0].real,c[3][0].imag,c[3][8].real,c[3][8].imag};
+	int16 c2[16] _MM_ALIGN32 = {c[0][1].real,c[0][1].imag,c[0][9].real,c[0][9].imag,c[1][1].real,c[1][1].imag,c[1][9].real,c[1][9].imag,c[2][1].real,c[2][1].imag,c[2][9].real,c[2][9].imag,c[3][1].real,c[3][1].imag,c[3][9].real,c[3][9].imag};
+	int16 c3[16] _MM_ALIGN32 = {c[0][2].real,c[0][2].imag,c[0][10].real,c[0][10].imag,c[1][2].real,c[1][2].imag,c[1][10].real,c[1][10].imag,c[2][2].real,c[2][2].imag,c[2][10].real,c[2][10].imag,c[3][2].real,c[3][2].imag,c[3][10].real,c[3][10].imag};
+	int16 c4[16] _MM_ALIGN32 = {c[0][3].real,c[0][3].imag,c[0][11].real,c[0][11].imag,c[1][3].real,c[1][3].imag,c[1][11].real,c[1][11].imag,c[2][3].real,c[2][3].imag,c[2][11].real,c[2][11].imag,c[3][3].real,c[3][3].imag,c[3][11].real,c[3][11].imag};
+	int16 c5[16] _MM_ALIGN32 = {c[0][4].real,c[0][4].imag,c[0][12].real,c[0][12].imag,c[1][4].real,c[1][4].imag,c[1][12].real,c[1][12].imag,c[2][4].real,c[2][4].imag,c[2][12].real,c[2][12].imag,c[3][4].real,c[3][4].imag,c[3][12].real,c[3][12].imag};
+	int16 c6[16] _MM_ALIGN32 = {c[0][5].real,c[0][5].imag,c[0][13].real,c[0][13].imag,c[1][5].real,c[1][5].imag,c[1][13].real,c[1][13].imag,c[2][5].real,c[2][5].imag,c[2][13].real,c[2][13].imag,c[3][5].real,c[3][5].imag,c[3][13].real,c[3][13].imag};
+	int16 c7[16] _MM_ALIGN32 = {c[0][6].real,c[0][6].imag,c[0][14].real,c[0][14].imag,c[1][6].real,c[1][6].imag,c[1][14].real,c[1][14].imag,c[2][6].real,c[2][6].imag,c[2][14].real,c[2][14].imag,c[3][6].real,c[3][6].imag,c[3][14].real,c[3][14].imag};
+	int16 c8[16] _MM_ALIGN32 = {c[0][7].real,c[0][7].imag,c[0][15].real,c[0][15].imag,c[1][7].real,c[1][7].imag,c[1][15].real,c[1][15].imag,c[2][7].real,c[2][7].imag,c[2][15].real,c[2][15].imag,c[3][7].real,c[3][7].imag,c[3][15].real,c[3][15].imag};
+	
+	//__m256i _mm256_add_epi16 (__m256i a, __m256i b)
+	//__m256i _mm256_load_si256 (__m256i const * mem_addr)
+	complex32 temp[8] _MM_ALIGN32 = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
+	__m256i temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8;
+	temp1 = _mm256_load_si256((__m256i*)c1);
+	temp2 = _mm256_load_si256((__m256i*)c2);
+	temp3 = _mm256_load_si256((__m256i*)c3);
+	temp4 = _mm256_load_si256((__m256i*)c4);
+	temp5 = _mm256_load_si256((__m256i*)c5);
+	temp6 = _mm256_load_si256((__m256i*)c6);
+	temp7 = _mm256_load_si256((__m256i*)c7);
+	temp8 = _mm256_load_si256((__m256i*)c8);
+	
+	temp1 = _mm256_add_epi16(temp1,temp2);
+	temp1 = _mm256_add_epi16(temp1,temp3);
+	temp1 = _mm256_add_epi16(temp1,temp4);
+	temp1 = _mm256_add_epi16(temp1,temp5);
+	temp1 = _mm256_add_epi16(temp1,temp6);
+	temp1 = _mm256_add_epi16(temp1,temp7);
+	temp1 = _mm256_add_epi16(temp1,temp8);
+	//_mm256_store_si256(__m256i * mem_addr, __m256i a)
+
+	_mm256_store_si256((__m256i *)temp,temp1);
+	memcpy(dest,&temp,32);
+}
+
 //Matrix_Mult for 16x16 use avx2
 //make sure dest's data equal 0
-void Matrix_Mult_AVX2_16(complex32 (*h)[16],complex32* x,complex32* dest){
-	complex32 a[16][16];
-	complex32 b[16][16];
-	complex32 c[16][16];
+void Matrix_Mult_AVX2_16(complex32 (*h)[16],complex32* x,complex32* dest, char h_updating){ //, char h_updating
+	static complex32 a[16][16];
+	//complex32 a[16][16];
+	//complex32 b[16][16];
+	complex32 c[16][16]_MM_ALIGN32;
 
 	int i,j;
 	for(i=0;i<16;i++){
-		for(j=0;j<16;j++){
-			a[i][j] = h[j][i];
-			b[i][j] = x[j];
+		if(h_updating == 1){
+			for(j=0;j<16;j++){
+				a[i][j] = h[j][i];
+				//a[i][j] = h[j][i];
+				//b[i][j] = x[j];
+			}	
 		}
+		//Mult_complex32Vector_2(a[i],b[i],c[i]);
+		Mult_complex32Vector_2(a[i], x, c[i]);
 	}
-	for(i=0;i<16;i++)
-		Mult_complex32Vector_2(a[i],b[i],c[i]);
 
 	int16 c01[16] _MM_ALIGN32 = {  c[0][0].real,  c[0][0].imag,  c[1][0].real,  c[1][0].imag,  c[2][0].real,  c[2][0].imag,  c[3][0].real,  c[3][0].imag,  c[4][0].real,  c[4][0].imag,  c[5][0].real,  c[5][0].imag,  c[6][0].real,  c[6][0].imag,  c[7][0].real,  c[7][0].imag};
 	int16 c02[16] _MM_ALIGN32 = {  c[0][1].real,  c[0][1].imag,  c[1][1].real,  c[1][1].imag,  c[2][1].real,  c[2][1].imag,  c[3][1].real,  c[3][1].imag,  c[4][1].real,  c[4][1].imag,  c[5][1].real,  c[5][1].imag,  c[6][1].real,  c[6][1].imag,  c[7][1].real,  c[7][1].imag};
@@ -253,7 +314,7 @@ void Matrix_Mult_AVX2_16(complex32 (*h)[16],complex32* x,complex32* dest){
 	temp1 = _mm256_add_epi16(temp1,temp16);
 	//_mm256_store_si256(__m256i * mem_addr, __m256i a)
 
-	_mm256_store_si256((__m256i *)temp,temp1);
+	_mm256_store_si256((__m256i *)temp, temp1);
 	memcpy(dest,&temp,32);
 
 	complex32 temp_1[8] _MM_ALIGN32 = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
@@ -817,10 +878,15 @@ int main(int argc, char* argv[]){
 	for (i = 0; i < Matrix_H; i++) printf("%d %d\n", x_dest[i].real, x_dest[i].imag);
 	printf("use AVX function: mult Matrix\n");
 	//using AVX
+	char H_change = 1;
 	start_time = clock();
-	for (times = 0; times < 10000000; times++)
-	//Mult_complex32Vector(a, b, c);
-		Matrix_Mult_AVX2_16(h,x,x_dest);
+	for (times = 0; times < 10000000; times++){
+		//Matrix_Mult_AVX2_8(h,x,x_dest);
+		Matrix_Mult_AVX2_8_opt(h,x,x_dest,H_change);
+		//Matrix_Mult_AVX2_16(h,x,x_dest);
+		//Matrix_Mult_AVX2_16(h,x,x_dest,H_change);
+		H_change = 0;	
+	}
 	end_time = clock();
 	printf("pall times = %fs\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
 	printf("The matrix mult answer:\n");
