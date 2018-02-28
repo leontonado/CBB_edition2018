@@ -36,7 +36,7 @@
 #include "allHeaders.h"
 //This version runs in the format of frame,which 8 pthread run on 8 individual cores,and we can transmit data to eth but haven't include the preamble part
 
-#define RUNMAINDPDK
+//#define RUNMAINDPDK
 #ifdef RUNMAINDPDK
 
 #define RTE_LOGTYPE_APP RTE_LOGTYPE_USER1
@@ -308,7 +308,7 @@ static int Data_sendto_707_loop()
 				nb_tx = rte_eth_tx_burst(port, 0,&m, 1);
 				Data_Distribute_count++;
 			} 			
-			if(Data_Distribute_count >=4000)
+			if(Data_Distribute_count >=40000)
 			{
 			quit = 1;
 			clock_gettime(CLOCK_REALTIME, &time2);

@@ -1,1 +1,1 @@
-kernel//home/felix/Desktop/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/build/lib/librte_eal/linuxapp/kni/rte_kni.ko
+kernel//home/zgp/my_project/CBB-base-edition/dpdk-stable-16.11.1/x86_64-native-linuxapp-gcc/build/lib/librte_eal/linuxapp/kni/rte_kni.ko
