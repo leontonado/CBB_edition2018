@@ -4,13 +4,10 @@ maindpdk1.c -------
 	sudo ./build/CBB-Transmiter --lcores='(1)@(1),(2)@(2),(3)@(3),(4)@(4),(5)@(5),(0,6)@(6)' -n 4
 maindpdk2.c ------- 
 	sudo ./build/CBB-Transmiter --lcores='(0,1,11)@(1),(2)@(2),(3)@(3),(4)@(4),(5,6)@(5),(7,8)@(6),(9)@(7),(10)@(0)' -n 4
-maindpdk3.c -------
-	sudo ./build/CBB-Transmiter --lcores='(1,2,0)@(1),(3,4)@(2),(5)@(3),(6)@(4),(7)@(5),(8,9)@(6),(10)@(7),(11)@(0)' -n 4
- maindpdk4.c
+ maindpdk3.c
  	sudo ./build/CBB-Transmiter --lcores='(1,2,0,12)@(1),(3,4)@(2),(5)@(3),(6)@(4),(7)@(5),(8,9)@(6),(10)@(7),(11)@(0)' -n 4
- maindpdk5.c ------- 
+ maindpdk4.c ------- 
  	sudo ./build/CBB-Transmiter --lcores='(1,2,3)@(1),(4,5,6)@(2),(7,8,9)@(3),(10,11,12)@(4),(13,14,15)@(5),(16,17,20)@(6),(18)@(7),(19,0)@(0)' -n 4   
-
 
 
 maindpdk_test.c -------	

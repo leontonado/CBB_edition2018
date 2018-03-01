@@ -34,8 +34,10 @@
 #include <time.h> 
 
 #include "allHeaders.h"
-//This version runs in the format of frame,which 8 pthread run on 8 individual cores,and we can transmit data to eth but haven't include the preamble part
-
+/*
+This version runs in the format of frame,which 8 pthread run on 8 individual cores,and we can transmit data to eth but haven't include the preamble part
+We add recieve module to recieve the control frame from eth  and revise the preamble part (2018/2/4) 
+*/
 //#define RUNMAINDPDK
 #ifdef RUNMAINDPDK
 
@@ -144,6 +146,7 @@ static int GenerateData_Loop7();
 static int GenerateData_Loop8();
 static int Data_Retrive_Loop();
 static int Data_sendto_707_loop();
+static int Receive_Signal_loop();
 
 struct timespec diff(struct timespec start, struct timespec end)
 {
@@ -224,17 +227,36 @@ static int modulate_DPDK(__attribute__((unused)) struct rte_mbuf *Data_In)
 	return 0;
 }	
 
-
-// static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
-// {
-// 	int i;
-// 	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *,0 );
-// 	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
-// 	for(i=0;i<N_STS;i++){
-// 		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
-// 	}
-// 	return 0;
-// }
+static int Receive_Signal_loop()
+{
+	const uint8_t nb_ports = rte_eth_dev_count();
+	uint8_t port = 0;
+	struct rte_mbuf *bufs[BURST_SIZE];
+	uint16_t nb_rx ,buf;
+	while(!quit)
+	{
+		for(port = 0;port <nb_ports ;port ++)
+		{
+			nb_rx = rte_eth_rx_burst(port,0,bufs,BURST_SIZE);
+			if(0 == nb_rx) continue ;
+			for(buf = 0;buf < nb_rx ;buf ++)
+				rte_pktmbuf_free(bufs[buf]);
+		}
+	}
+	return 0;
+}
+/*   CSD module is unnessesary if there is only single stream
+static int CSD_encode_DPDK (__attribute__((unused)) struct rte_mbuf *Data_In)
+{
+	int i;
+	complex32 *csd_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *,0 );
+	complex32 *subcar_map_data = rte_pktmbuf_mtod_offset(Data_In, complex32 *, RTE_MBUF_DEFAULT_BUF_SIZE*15);
+	for(i=0;i<N_STS;i++){
+		__Data_CSD_aux(&subcar_map_data, N_SYM, &csd_data,i);
+	}
+	return 0;
+}
+*/
 
 static int Data_sendto_707_loop()
 {
@@ -251,7 +273,7 @@ static int Data_sendto_707_loop()
 	struct rte_mbuf*bufs[BURST_SIZE];
 	struct rte_mbuf *m;
 	rte_eth_macaddr_get(port, &addr);
-	//printf("Core %u forwarding packets. \n",rte_lcore_id());
+	printf("Core %u forwarding packets. \n",rte_lcore_id());
 
 	while (!quit)
 	{
@@ -308,7 +330,7 @@ static int Data_sendto_707_loop()
 				nb_tx = rte_eth_tx_burst(port, 0,&m, 1);
 				Data_Distribute_count++;
 			} 			
-			if(Data_Distribute_count >=40000)
+			if(Data_Distribute_count >=40)
 			{
 			quit = 1;
 			clock_gettime(CLOCK_REALTIME, &time2);
@@ -328,6 +350,11 @@ static int Data_sendto_707_loop()
 			printf("Data_Distribute_loop_count = %ld\n", Data_Distribute_loop_count);
 			printf("nodataInRing707_count = %ld\n",nodataInRing707_count );
 		}
+			/* Free any unsent packets. */
+			// if (unlikely(nb_tx < BURST_SIZE)) {
+			// 	for (buf = nb_tx; buf < BURST_SIZE; buf++)
+			// 		rte_pktmbuf_free(bufs[buf]);
+			// }
 	}
 	
 	return 0;
@@ -371,7 +398,7 @@ static int Data_Retrive_Loop()
 		total_num -=complexnum_PerUser;		
 		frag_cnt++;                                 //calculate how many frags wo need
 	}
-	//printf("Fragment total num is %d\n",frag_cnt );
+	printf("Fragment total num is %d\n",frag_cnt );
 
 	while (!quit)
 	{
@@ -403,7 +430,7 @@ static int Data_Retrive_Loop()
 				data->data_len = Fragment_length+14;
 				data->packet_type = (uint32_t)RTE_PTYPE_L3_IPV4; 
 				dest = rte_pktmbuf_mtod(data, char *);
-				*dest = 0x18  ;                     					                //0x1x represents this is data frame
+				*dest = 0x18  ;                     					                 //      0x1x represents this is data frame
 				if(i==0)
 				{
 					*(dest+1) = 0x41;
@@ -411,15 +438,15 @@ static int Data_Retrive_Loop()
 				else{
 					*(dest+1) = 0x80;
 				 	*(dest+1) |= i+1;	
-				}                                                        				                  //     frag sequence
-				*((int16*)dest+1) = 0xffff;                               				     //     store addr
-				*((int16*)dest+2) = Fragment_length;                      			     //     data length(unit : byte)
-				*(dest+6) = 8 ;                        						     //     represents user num
-				*(dest+7) = 0 ; 	  	                                                                                   //     represents data type
-				*(dest+8) = i+1; 	                                                                                   //     sequence of this fragment
-				*(dest+9) = frag_cnt;	                                                                                   //     fragment total num 
-				*((int16*)dest+5) = Fragment_length;                                                             //     fragment length
-				*((int16*)dest+6) = N_SYM *subcar *4; 		                                            //     total length of a frame
+				}                                                        				                  //       frag sequence
+				*((int16*)dest+1) = 0xffff;                               				     //       store addr
+				*((int16*)dest+2) = Fragment_length;                      			     //       data length(unit : byte)
+				*(dest+6) = 8 ;                                                                                                   //       represents user num
+				*(dest+7) = 0 ; 	  	                                                                                   //       represents data type
+				*(dest+8) = i+1; 	                                                                                   //       sequence of this fragment
+				*(dest+9) = frag_cnt;	                                                                                   //       fragment total num 
+				*((int16*)dest+5) = Fragment_length;                                                             //       fragment length
+				*((int16*)dest+6) = N_SYM *subcar *4; 		                                            //       total length of a frame
 				dest+=14;
 				for(j=0;j<complexnum_PerUser;j++)
 				{
@@ -435,7 +462,7 @@ static int Data_Retrive_Loop()
 				rte_ring_enqueue(Ring_Datato707,data);
 				data =NULL;
 			}
-			//              last fragment
+			// last fragment
 			while(data == NULL) {
 				usleep(100);
 				data = rte_pktmbuf_alloc(mbuf_fragment_pool);
@@ -444,17 +471,17 @@ static int Data_Retrive_Loop()
 			data->data_len = total_num*8*4+14;
 			data->packet_type = (uint32_t)RTE_PTYPE_L3_IPV4; 
 			dest = rte_pktmbuf_mtod(data, char *);
-			*dest = 0x18  ;                     					       //0x1x represents this is data frame
+			*dest = 0x18  ;                     					                  //        0x1x represents this is data frame
 			*(dest+1) = 0xc0;
-			*(dest+1)|=frag_cnt;	                                                                                   //       lasts frag sequence
-			*((int16*)dest+1) = 0xffff;                               				     //       store addr
-			*((int16*)dest+2) = total_num*8*4;                      			     //       data length(unit : byte)
-			*(dest+6) = 8 ;                                                                                                   //       represents user num
-			*(dest+7) = 0 ; 	  	                                                                                   //       represents data type
-			*(dest+8) = frag_cnt; 	                                                                                   //       sequence of this fragment
-			*(dest+9) = frag_cnt;	                                                                                   //       fragment total num 
-			*((int16*)dest+5) = total_num *4;                                                                    //       fragment length
-			*((int16*)dest+6) = N_SYM *subcar ; 		                                             //       total length of a frame
+			*(dest+1)|=frag_cnt;	                                                                                   //        lats frag sequence
+			*((int16*)dest+1) = 0xffff;                               				     //        store addr
+			*((int16*)dest+2) = total_num*8*4;                      			     //        data length(unit : byte)
+			*(dest+6) = 8 ;                                                                                                   //        represents user num
+			*(dest+7) = 0 ; 	  	                                                                                   //        represents data type
+			*(dest+8) = frag_cnt; 	                                                                                   //        sequence of this fragment
+			*(dest+9) = frag_cnt;	                                                                                   //        fragment total num 
+			*((int16*)dest+5) = total_num *4;                                                                    //        fragment length
+			*((int16*)dest+6) = N_SYM *subcar ; 		                                             //        total length of a frame
 			dest+=14;
 			for(j=0;j<total_num;j++)
 			{
@@ -875,22 +902,23 @@ int main(int argc, char **argv)
 	int ret;
 	// 运行一次得到preamble和HeLTF.
 	//generatePreambleAndHeLTF_csd();
-	// 运行一次得到比特干扰码表。
+	
+	// 比特干扰码表
 	Creatnewchart();
-	// 运行一次得到BCC编码表。
+	
+	// 得到BCC编码表
 	init_BCCencode_table();
 	
-	// 运行一次得到CSD表。
+	// 运行一次得到HeLTF CSD表。
 	//initcsdTableForHeLTF();
+	
 	// 初始化函数，计算OFDM符号个数，字节长度
-	//int N_CBPS, N_SYM, ScrLength, valid_bits;
    	GenInit(&N_CBPS, &N_SYM, &ScrLength, &valid_bits);
-
+   	
    	// 运行一次得到生成导频的分流交织表
 	initial_streamwave_table(N_SYM);
 	init_mapping_table();
 	///////////////////////////////////////////////////////////////////////////////////
-	//unsigned lcore_id;
 	ret = rte_eal_init(argc, argv);
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Cannot init EAL\n");
@@ -981,6 +1009,7 @@ int main(int argc, char **argv)
 	rte_eal_remote_launch(GenerateData_Loop8, NULL,9);
 	rte_eal_remote_launch(Data_Retrive_Loop, NULL,10);
 	rte_eal_remote_launch(Data_sendto_707_loop, NULL,11); 
+	rte_eal_remote_launch(Receive_Signal_loop, NULL,12);
 	rte_eal_mp_wait_lcore();
 	for (portid = 0; portid < nb_ports; portid++) {
 		printf("Closing port %d...", portid);

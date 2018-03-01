@@ -4,7 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include "allHeaders.h"
-
+//the very first version of CBB translated from matlab
 //#define RUNBFCSD
 #ifdef RUNBFCSD
 
@@ -12,7 +12,7 @@ int isPreAndHeLTFVauled=0;
 
 int main(int argc, char* argv[]){
 	complex32* STF[N_TX];
-    complex32* LTF[N_TX];
+    	complex32* LTF[N_TX];
 	complex32* Sig[N_TX];
 	complex32* heLTF[N_TX];
 	unsigned char* databits=(unsigned char*)malloc(APEP_LEN*sizeof(unsigned char));
